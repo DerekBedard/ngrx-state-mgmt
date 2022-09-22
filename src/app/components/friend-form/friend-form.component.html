@@ -1,96 +1,69 @@
-<form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
-  <mat-card class="shipping-card">
+<form [formGroup]="friendForm" novalidate (ngSubmit)="onSubmit()">
+  <mat-card class="user-card">
     <mat-card-header>
-      <mat-card-title>Shipping Information</mat-card-title>
+      <mat-card-title>Enter your information</mat-card-title>
     </mat-card-header>
     <mat-card-content>
       <div class="row">
-        <div class="col-12">
+        <div class="col-12 pt-3">
           <mat-form-field class="full-width">
-            <input matInput placeholder="Company" formControlName="company">
-          </mat-form-field>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-12 col-sm-6">
-          <mat-form-field class="full-width">
-            <input matInput placeholder="First name" formControlName="firstName">
-            <mat-error *ngIf="addressForm.controls['firstName'].hasError('required')">
-              First name is <strong>required</strong>
+            <input matInput placeholder="Your name" type="text" formControlName="name">
+            <mat-error *ngIf="friendForm.controls['name'].hasError('required')">
+              Required field
+            </mat-error>
+            <mat-error *ngIf="friendForm.controls['name'].hasError('pattern')">
+              Letters only
             </mat-error>
           </mat-form-field>
         </div>
-        <div class="col-12 col-sm-6">
+        <div class="col-12 col-sm-6 pt-4">
           <mat-form-field class="full-width">
-            <input matInput placeholder="Last name" formControlName="lastName">
-            <mat-error *ngIf="addressForm.controls['lastName'].hasError('required')">
-              Last name is <strong>required</strong>
+            <input matInput placeholder="Your weight (in lbs.)" type="number" formControlName="weight">
+            <mat-error *ngIf="friendForm.controls['weight'].hasError('required')">
+              Required field
+            </mat-error>
+            <mat-error *ngIf="friendForm.controls['weight'].hasError('min')">
+              Must be at least 50 lbs.
+            </mat-error>
+            <mat-error *ngIf="friendForm.controls['weight'].hasError('max')">
+              Must be less than 1000 lbs.
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-12 col-sm-6 pt-4">
+          <mat-form-field class="full-width">
+            <input matInput placeholder="Your age (in years)" type="number" formControlName="age">
+            <mat-error *ngIf="friendForm.controls['age'].hasError('required')">
+              Required field
+            </mat-error>
+            <mat-error *ngIf="friendForm.controls['age'].hasError('min')">
+              You must be at least 18 years old
+            </mat-error>
+            <mat-error *ngIf="friendForm.controls['age'].hasError('max')">
+              Must be less than 150 years old
             </mat-error>
           </mat-form-field>
         </div>
       </div>
-      <div class="row">
-        <div class="col-12">
+      <div class="row" *ngFor="let friend of friends; let i = index">
+        <div class="pt-4" [ngClass]="{'col-12': i < friends.length - 1, 'col-9 col-sm-10 col-md-11': i === friends.length - 1}">
           <mat-form-field class="full-width">
-            <textarea matInput placeholder="Address" formControlName="address"></textarea>
-            <mat-error *ngIf="addressForm.controls['address'].hasError('required')">
-              Address is <strong>required</strong>
+            <input matInput placeholder="{{getFriendPlaceholder(i)}}" formControlName="{{friend.id}}">
+            <mat-error *ngIf="friendForm.controls[friend.id].hasError('pattern')">
+              Letters only
             </mat-error>
           </mat-form-field>
         </div>
-      </div>
-      <div class="row" *ngIf="!hasUnitNumber">
-        <div class="col-12 col-sm-6">
-          <button mat-button type="button" (click)="hasUnitNumber = !hasUnitNumber">
-            + Add C/O, Apt, Suite, Unit
+        <div class="col-3 col-sm-2 col-md-1 pt-4" *ngIf="i === friends.length - 1">
+          <button mat-mini-fab type="button" color="primary" aria-label="Delete friend">
+            <mat-icon>delete</mat-icon>
           </button>
         </div>
       </div>
-      <div class="row" *ngIf="hasUnitNumber">
-        <div class="col-12 col-sm-6">
-          <mat-form-field class="full-width">
-            <textarea matInput placeholder="Address 2" formControlName="address2"></textarea>
-          </mat-form-field>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-12 col-sm-6">
-          <mat-form-field class="full-width">
-            <input matInput placeholder="City" formControlName="city">
-            <mat-error *ngIf="addressForm.controls['city'].hasError('required')">
-              City is <strong>required</strong>
-            </mat-error>
-          </mat-form-field>
-        </div>
-        <div class="col-12 col-sm-6">
-          <mat-form-field class="full-width">
-            <mat-select placeholder="State" formControlName="state">
-              <mat-option *ngFor="let state of states" [value]="state.abbreviation">
-                {{ state.name }}
-              </mat-option>
-            </mat-select>
-            <mat-error *ngIf="addressForm.controls['state'].hasError('required')">
-              State is <strong>required</strong>
-            </mat-error>
-          </mat-form-field>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-12 col-sm-6">
-          <mat-form-field class="full-width">
-            <input matInput #postalCode maxlength="5" placeholder="Postal Code" type="number" formControlName="postalCode">
-            <mat-hint align="end">{{postalCode.value.length}} / 5</mat-hint>
-          </mat-form-field>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-12 col-sm-6">
-          <mat-radio-group formControlName="shipping">
-            <mat-radio-button value="free">Free Shipping</mat-radio-button>
-            <mat-radio-button value="priority">Priority Shipping</mat-radio-button>
-            <mat-radio-button value="nextday">Next Day Shipping</mat-radio-button>
-          </mat-radio-group>
-        </div>
+      <div class="col-12 pt-4">
+        <button mat-button type="button" disabled="{{friends.length === 5}}" (click)="addFriend()">
+          + Add friend
+        </button>
       </div>
     </mat-card-content>
     <mat-card-actions>
@@ -98,3 +71,4 @@
     </mat-card-actions>
   </mat-card>
 </form>
+{{friendForm?.value|json}}
