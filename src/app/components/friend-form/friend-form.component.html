@@ -48,20 +48,20 @@
       <div class="row" *ngFor="let friend of friends; let i = index">
         <div class="pt-4" [ngClass]="{'col-12': i < friends.length - 1, 'col-9 col-sm-10 col-md-11': i === friends.length - 1}">
           <mat-form-field class="full-width">
-            <input matInput placeholder="{{getFriendPlaceholder(i)}}" formControlName="{{friend.id}}">
-            <mat-error *ngIf="friendForm.controls[friend.id].hasError('pattern')">
+            <input matInput placeholder="{{getFriendPlaceholder(i)}}" readonly="{{i < friends.length - 1}}" formControlName="{{friend}}">
+            <mat-error *ngIf="friendForm.controls[friend].hasError('pattern')">
               Letters only
             </mat-error>
           </mat-form-field>
         </div>
         <div class="col-3 col-sm-2 col-md-1 pt-4" *ngIf="i === friends.length - 1">
-          <button mat-mini-fab type="button" color="primary" aria-label="Delete friend">
+          <button mat-mini-fab type="button" color="primary" aria-label="Delete friend" (click)="deleteFriend()">
             <mat-icon>delete</mat-icon>
           </button>
         </div>
       </div>
       <div class="col-12 pt-4">
-        <button mat-button type="button" disabled="{{friends.length === 5}}" (click)="addFriend()">
+        <button mat-button type="button" disabled="{{friends.length === 5 || disableAddFriend()}}" (click)="addFriend()">
           + Add friend
         </button>
       </div>
