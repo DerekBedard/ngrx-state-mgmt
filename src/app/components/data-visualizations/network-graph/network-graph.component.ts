@@ -13,19 +13,17 @@ export class NetworkGraphComponent implements OnInit {
   svg: any;
   data: any = {
     nodes: [
-      { id: "Derek" },
-      { id: "Janelle" },
-      { id: "Bob Bedard" },
-      { id: "Batman"},
-      { id: "Superman"},
-      { id: "Hulk"},
+      { id: "Red Ranger" },
+      { id: "Blue Ranger" },
+      { id: "Yellow Ranger" },
+      { id: "Green Ranger"},
+      { id: "Pink Ranger"}
     ],
     links: [
-      { source: "Derek", target: "Janelle" },
-      { source: "Derek", target: "Bob Bedard" },
-      { source: "Janelle", target: "Bob Bedard" },
-      { source: "Bob Bedard", target: "Batman" },
-      { source: "Superman", target: "Hulk" },
+      { source: "Red Ranger", target: "Blue Ranger" },
+      { source: "Red Ranger", target: "Yellow Ranger" },
+      { source: "Yellow Ranger", target: "Green Ranger" },
+      { source: "Green Ranger", target: "Pink Ranger" }
     ],
   };
 

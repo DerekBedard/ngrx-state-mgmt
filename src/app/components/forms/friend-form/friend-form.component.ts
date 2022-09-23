@@ -8,7 +8,8 @@ import { FriendFormService } from './services/friend-form.service';
   styleUrls: ['./friend-form.component.scss'],
 })
 export class FriendFormComponent implements OnInit {
-  personFG: any = this.fb.group({
+  people: any = {};
+  person: any = this.fb.group({
     name: [
       null,
       Validators.compose([
@@ -32,7 +33,7 @@ export class FriendFormComponent implements OnInit {
         Validators.max(150),
       ]),
     ],
-    friendsFG: this.fb.group({}),
+    friends: this.fb.group({}),
   });
   friendControlKeys: string[] = []; // form control key names for friend fields
   friendCount: number = 0;
@@ -44,12 +45,12 @@ export class FriendFormComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.subscribeToValChanges();
+    this.subscribeToFormValChanges();
   }
 
-  subscribeToValChanges(): void {
-    this.personFG.valueChanges.subscribe(() => {
-      if (this.personFG.valid) {
+  subscribeToFormValChanges(): void {
+    this.person.valueChanges.subscribe(() => {
+      if (this.person.valid) {
         this.showErrMsg = false;
       }
     });
@@ -57,10 +58,10 @@ export class FriendFormComponent implements OnInit {
 
   addFriendField(): void {
     this.friendCount++;
-    this.personFG = this.fb.group({
-      ...this.personFG.controls,
-      friendsFG: this.fb.group({
-        ...this.personFG.controls['friendsFG'].controls,
+    this.person = this.fb.group({
+      ...this.person.controls,
+      friends: this.fb.group({
+        ...this.person.controls['friends'].controls,
         ['friend' + this.friendCount.toString()]: [
           null,
           Validators.pattern('^[a-z A-Z]+$'),
@@ -73,14 +74,14 @@ export class FriendFormComponent implements OnInit {
   deleteFriendField(): void {
     this.friendCount--;
     let controlKey = this.friendControlKeys.pop();
-    this.personFG.controls['friendsFG'].removeControl(controlKey);
+    this.person.controls['friends'].removeControl(controlKey);
   }
 
   onSubmit(): void {
-    this.personFG.markAllAsTouched();
-    if (this.personFG.valid) {
+    this.person.markAllAsTouched();
+    if (this.person.valid) {
       console.log("Validation passed!");
-      console.log("this.personFG.value: ", this.personFG.value);
+      console.log("this.person.value: ", this.person.value);
     } else {
       this.showErrMsg = true;
     }
