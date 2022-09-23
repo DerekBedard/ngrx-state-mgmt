@@ -1,0 +1,14 @@
+<mat-form-field class="full-width" [formGroup]="friendForm">
+  <input
+    matInput
+    type="text"
+    [placeholder]="placeholder"
+    [readonly]="readonly"
+    [formControlName]="controlName" />
+  <mat-error *ngIf="friendForm.controls[controlName].hasError('required')">
+    Required field
+  </mat-error>
+  <mat-error *ngIf="friendForm.controls[controlName].hasError('pattern')">
+    Letters only
+  </mat-error>
+</mat-form-field>

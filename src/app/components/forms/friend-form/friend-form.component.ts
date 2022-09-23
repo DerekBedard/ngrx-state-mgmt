@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
+import { FriendFormService } from './services/friend-form.service';
 
 @Component({
   selector: 'app-friend-form',
@@ -32,11 +33,14 @@ export class FriendFormComponent {
       ]),
     ],
   });
-  friends: any[] = []; // form control keys
-
-  constructor(private fb: FormBuilder) {}
-
+  friends: string[] = []; // form control key names for friend fields
   friendCount: number = 0;
+
+  constructor(
+    private fb: FormBuilder,
+    public friendFormService: FriendFormService
+  ) {}
+
   addFriend(): void {
     this.friendCount++;
     this.friendForm = this.fb.group({
@@ -63,16 +67,9 @@ export class FriendFormComponent {
   }
 
   deleteFriend(): void {
+    this.friendCount--;
     let controlKey = this.friends.pop();
     this.friendForm.removeControl(controlKey);
-  }
-
-  getFriendPlaceholder(i: number): string {
-    if (i === 0) {
-      return "A friend's name";
-    } else {
-      return "Another friend's name";
-    }
   }
 
   onSubmit(): void {

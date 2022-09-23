@@ -6,19 +6,19 @@
     <mat-card-content>
       <div class="row">
         <div class="col-12 pt-3">
-          <mat-form-field class="full-width">
-            <input matInput placeholder="Your name" type="text" formControlName="name">
-            <mat-error *ngIf="friendForm.controls['name'].hasError('required')">
-              Required field
-            </mat-error>
-            <mat-error *ngIf="friendForm.controls['name'].hasError('pattern')">
-              Letters only
-            </mat-error>
-          </mat-form-field>
+          <app-name-field
+            [friendForm]="friendForm"
+            [placeholder]="'Your name'"
+            [controlName]="'name'">
+          </app-name-field>
         </div>
         <div class="col-12 col-sm-6 pt-4">
           <mat-form-field class="full-width">
-            <input matInput placeholder="Your weight (in lbs.)" type="number" formControlName="weight">
+            <input
+              matInput
+              placeholder="Your weight (in lbs.)"
+              type="number"
+              formControlName="weight"/>
             <mat-error *ngIf="friendForm.controls['weight'].hasError('required')">
               Required field
             </mat-error>
@@ -32,7 +32,11 @@
         </div>
         <div class="col-12 col-sm-6 pt-4">
           <mat-form-field class="full-width">
-            <input matInput placeholder="Your age (in years)" type="number" formControlName="age">
+            <input
+              matInput
+              placeholder="Your age (in years)"
+              type="number"
+              formControlName="age"/>
             <mat-error *ngIf="friendForm.controls['age'].hasError('required')">
               Required field
             </mat-error>
@@ -46,22 +50,35 @@
         </div>
       </div>
       <div class="row" *ngFor="let friend of friends; let i = index">
-        <div class="pt-4" [ngClass]="{'col-12': i < friends.length - 1, 'col-9 col-sm-10 col-md-11': i === friends.length - 1}">
-          <mat-form-field class="full-width">
-            <input matInput placeholder="{{getFriendPlaceholder(i)}}" readonly="{{i < friends.length - 1}}" formControlName="{{friend}}">
-            <mat-error *ngIf="friendForm.controls[friend].hasError('pattern')">
-              Letters only
-            </mat-error>
-          </mat-form-field>
+        <div
+          class="pt-4"
+          [ngClass]="{'col-12': i < friends.length - 1,'col-9 col-sm-10 col-md-11': i === friends.length - 1}">
+          <app-name-field
+            [friendForm]="friendForm"
+            [placeholder]="friendFormService.getFriendPlaceholder(i)"
+            [readonly]="i < friends.length - 1"
+            [controlName]="friend">
+          </app-name-field>
         </div>
-        <div class="col-3 col-sm-2 col-md-1 pt-4" *ngIf="i === friends.length - 1">
-          <button mat-mini-fab type="button" color="primary" aria-label="Delete friend" (click)="deleteFriend()">
+        <div
+          class="col-3 col-sm-2 col-md-1 pt-4"
+          *ngIf="i === friends.length - 1">
+          <button
+            mat-mini-fab
+            type="button"
+            color="primary"
+            aria-label="Delete friend"
+            (click)="deleteFriend()">
             <mat-icon>delete</mat-icon>
           </button>
         </div>
       </div>
       <div class="col-12 pt-4">
-        <button mat-button type="button" disabled="{{friends.length === 5 || disableAddFriend()}}" (click)="addFriend()">
+        <button
+          mat-button
+          type="button"
+          [disabled]="friends.length === 5 || disableAddFriend()"
+          (click)="addFriend()">
           + Add friend
         </button>
       </div>
@@ -71,4 +88,4 @@
     </mat-card-actions>
   </mat-card>
 </form>
-{{friendForm?.value|json}}
+{{ friendForm?.value | json }}
