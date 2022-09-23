@@ -15,13 +15,15 @@ import { MatIconModule } from '@angular/material/icon';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NameFieldComponent } from './components/fields/name-field/name-field.component';
 import { NumberFieldComponent } from './components/fields/number-field/number-field.component';
+import { NetworkGraphComponent } from './components/data-visualizations/network-graph/network-graph.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     FriendFormComponent,
     NameFieldComponent,
-    NumberFieldComponent
+    NumberFieldComponent,
+    NetworkGraphComponent
   ],
   imports: [
     BrowserModule,
