@@ -3,6 +3,9 @@
     <mat-card-header>
       <mat-card-title>Enter your information</mat-card-title>
     </mat-card-header>
+    <div class="alert alert-err" role="alert" *ngIf="showErrMsg">
+      Please correct all form errors before resubmitting.
+    </div>
     <mat-card-content>
       <div class="row">
         <div class="col-12 pt-3">
@@ -68,4 +71,3 @@
     </mat-card-actions>
   </mat-card>
 </form>
-{{ personFG?.value | json }}

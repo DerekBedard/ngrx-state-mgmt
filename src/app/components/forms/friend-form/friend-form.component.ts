@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { FriendFormService } from './services/friend-form.service';
 
@@ -7,7 +7,7 @@ import { FriendFormService } from './services/friend-form.service';
   templateUrl: './friend-form.component.html',
   styleUrls: ['./friend-form.component.scss'],
 })
-export class FriendFormComponent {
+export class FriendFormComponent implements OnInit {
   personFG: any = this.fb.group({
     name: [
       null,
@@ -36,11 +36,24 @@ export class FriendFormComponent {
   });
   friendControlKeys: string[] = []; // form control key names for friend fields
   friendCount: number = 0;
+  showErrMsg: Boolean = false;
 
   constructor(
     private fb: FormBuilder,
     public friendFormService: FriendFormService
   ) {}
+
+  ngOnInit() {
+    this.subscribeToValChanges();
+  }
+
+  subscribeToValChanges(): void {
+    this.personFG.valueChanges.subscribe(() => {
+      if (this.personFG.valid) {
+        this.showErrMsg = false;
+      }
+    });
+  }
 
   addFriendField(): void {
     this.friendCount++;
@@ -64,6 +77,12 @@ export class FriendFormComponent {
   }
 
   onSubmit(): void {
-    alert('Submitted!');
+    this.personFG.markAllAsTouched();
+    if (this.personFG.valid) {
+      console.log("Validation passed!");
+      console.log("this.personFG.value: ", this.personFG.value);
+    } else {
+      this.showErrMsg = true;
+    }
   }
 }
