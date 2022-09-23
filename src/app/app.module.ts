@@ -14,12 +14,14 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NameFieldComponent } from './components/fields/name-field/name-field.component';
+import { NumberFieldComponent } from './components/fields/number-field/number-field.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     FriendFormComponent,
-    NameFieldComponent
+    NameFieldComponent,
+    NumberFieldComponent
   ],
   imports: [
     BrowserModule,

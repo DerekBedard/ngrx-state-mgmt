@@ -8,7 +8,7 @@ import { FriendFormService } from './services/friend-form.service';
   styleUrls: ['./friend-form.component.scss'],
 })
 export class FriendFormComponent {
-  friendForm: any = this.fb.group({
+  personFG: any = this.fb.group({
     name: [
       null,
       Validators.compose([
@@ -32,8 +32,9 @@ export class FriendFormComponent {
         Validators.max(150),
       ]),
     ],
+    friendsFG: this.fb.group({}),
   });
-  friends: string[] = []; // form control key names for friend fields
+  friendControlKeys: string[] = []; // form control key names for friend fields
   friendCount: number = 0;
 
   constructor(
@@ -41,35 +42,25 @@ export class FriendFormComponent {
     public friendFormService: FriendFormService
   ) {}
 
-  addFriend(): void {
+  addFriendField(): void {
     this.friendCount++;
-    this.friendForm = this.fb.group({
-      ...this.friendForm.controls,
-      ['friend' + this.friendCount.toString()]: [
-        null,
-        Validators.pattern('^[a-z A-Z]+$'),
-      ],
+    this.personFG = this.fb.group({
+      ...this.personFG.controls,
+      friendsFG: this.fb.group({
+        ...this.personFG.controls['friendsFG'].controls,
+        ['friend' + this.friendCount.toString()]: [
+          null,
+          Validators.pattern('^[a-z A-Z]+$'),
+        ],
+      }),
     });
-    this.friends.push('friend' + this.friendCount.toString());
+    this.friendControlKeys.push('friend' + this.friendCount.toString());
   }
 
-  disableAddFriend(): Boolean {
-    if (this.friends.length > 0) {
-      let hasVal = this.friendForm.controls[this.friends[this.friends.length - 1]].value;
-      let hasErr = this.friendForm.controls[this.friends[this.friends.length - 1]].hasError('pattern');
-      if (hasVal && !hasErr) {
-        return false;
-      } else {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  deleteFriend(): void {
+  deleteFriendField(): void {
     this.friendCount--;
-    let controlKey = this.friends.pop();
-    this.friendForm.removeControl(controlKey);
+    let controlKey = this.friendControlKeys.pop();
+    this.personFG.controls['friendsFG'].removeControl(controlKey);
   }
 
   onSubmit(): void {

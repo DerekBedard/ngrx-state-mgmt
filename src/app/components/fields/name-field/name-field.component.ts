@@ -7,10 +7,10 @@ import { Component, Input, OnInit } from '@angular/core';
   styleUrls: ['./name-field.component.scss'],
 })
 export class NameFieldComponent implements OnInit {
-  @Input() friendForm: any;
+  @Input() group: any;
+  @Input() control: string = '';
   @Input() placeholder: string = '';
   @Input() readonly: BooleanInput = false;
-  @Input() controlName: string = '';
 
   constructor() {}
 

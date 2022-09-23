@@ -1,4 +1,4 @@
-<form [formGroup]="friendForm" novalidate (ngSubmit)="onSubmit()">
+<form [formGroup]="personFG" novalidate (ngSubmit)="onSubmit()">
   <mat-card class="user-card">
     <mat-card-header>
       <mat-card-title>Enter your information</mat-card-title>
@@ -7,68 +7,48 @@
       <div class="row">
         <div class="col-12 pt-3">
           <app-name-field
-            [friendForm]="friendForm"
-            [placeholder]="'Your name'"
-            [controlName]="'name'">
+            [group]="personFG"
+            [control]="'name'"
+            [placeholder]="'Your name'">
           </app-name-field>
         </div>
         <div class="col-12 col-sm-6 pt-4">
-          <mat-form-field class="full-width">
-            <input
-              matInput
-              placeholder="Your weight (in lbs.)"
-              type="number"
-              formControlName="weight"/>
-            <mat-error *ngIf="friendForm.controls['weight'].hasError('required')">
-              Required field
-            </mat-error>
-            <mat-error *ngIf="friendForm.controls['weight'].hasError('min')">
-              Must be at least 50 lbs.
-            </mat-error>
-            <mat-error *ngIf="friendForm.controls['weight'].hasError('max')">
-              Must be less than 1000 lbs.
-            </mat-error>
-          </mat-form-field>
+          <app-number-field
+            [group]="personFG"
+            [control]="'weight'"
+            [placeholder]="'Your weight (in lbs.)'"
+            [minErrMsg]="'Weight entry may not be less than 50 lbs.'"
+            [maxErrMsg]="'Weight entry may not exceed 1000 lbs.'">
+          </app-number-field>
         </div>
         <div class="col-12 col-sm-6 pt-4">
-          <mat-form-field class="full-width">
-            <input
-              matInput
-              placeholder="Your age (in years)"
-              type="number"
-              formControlName="age"/>
-            <mat-error *ngIf="friendForm.controls['age'].hasError('required')">
-              Required field
-            </mat-error>
-            <mat-error *ngIf="friendForm.controls['age'].hasError('min')">
-              You must be at least 18 years old
-            </mat-error>
-            <mat-error *ngIf="friendForm.controls['age'].hasError('max')">
-              Must be less than 150 years old
-            </mat-error>
-          </mat-form-field>
+          <app-number-field
+            [group]="personFG"
+            [control]="'age'"
+            [placeholder]="'Your age (in years)'"
+            [minErrMsg]="'You must be at least 18 years old'"
+            [maxErrMsg]="'Age entries may not exceed 150'">
+          </app-number-field>
         </div>
       </div>
-      <div class="row" *ngFor="let friend of friends; let i = index">
+      <div class="row" *ngFor="let controlKey of friendControlKeys; let i = index">
         <div
           class="pt-4"
-          [ngClass]="{'col-12': i < friends.length - 1,'col-9 col-sm-10 col-md-11': i === friends.length - 1}">
+          [ngClass]="{'col-12': i < friendControlKeys.length - 1,'col-9 col-sm-10 col-md-11': i === friendControlKeys.length - 1}">
           <app-name-field
-            [friendForm]="friendForm"
+            [group]="personFG.controls['friendsFG']"
+            [control]="controlKey"
             [placeholder]="friendFormService.getFriendPlaceholder(i)"
-            [readonly]="i < friends.length - 1"
-            [controlName]="friend">
+            [readonly]="i < friendControlKeys.length - 1">
           </app-name-field>
         </div>
-        <div
-          class="col-3 col-sm-2 col-md-1 pt-4"
-          *ngIf="i === friends.length - 1">
+        <div class="col-3 col-sm-2 col-md-1 pt-4" *ngIf="i === friendControlKeys.length - 1">
           <button
             mat-mini-fab
             type="button"
             color="primary"
             aria-label="Delete friend"
-            (click)="deleteFriend()">
+            (click)="deleteFriendField()">
             <mat-icon>delete</mat-icon>
           </button>
         </div>
@@ -77,8 +57,8 @@
         <button
           mat-button
           type="button"
-          [disabled]="friends.length === 5 || disableAddFriend()"
-          (click)="addFriend()">
+          [disabled]="friendControlKeys.length === 5 || friendFormService.disableAddFriendBtn(friendControlKeys, personFG.controls['friendsFG'])"
+          (click)="addFriendField()">
           + Add friend
         </button>
       </div>
@@ -88,4 +68,4 @@
     </mat-card-actions>
   </mat-card>
 </form>
-{{ friendForm?.value | json }}
+{{ personFG?.value | json }}
