@@ -1,11 +1,7 @@
-
-<div *ngFor="let person of people$ | async">
-  {{ person.name }}
-</div>
-<form [formGroup]="personFormGroup" novalidate (ngSubmit)="onSubmit()">
+<form [formGroup]="personUpdateFormGroup" novalidate (ngSubmit)="onSubmit()">
   <mat-card class="user-card">
     <mat-card-header>
-      <mat-card-title>Update the network:</mat-card-title>
+      <mat-card-title>Update a person the network:</mat-card-title>
     </mat-card-header>
     <div class="alert alert-err" role="alert" *ngIf="showErrMsg">
       Please correct all form errors before resubmitting.
@@ -13,65 +9,45 @@
     <mat-card-content>
       <div class="row">
         <div class="col-12 pt-3">
-          <app-name-field
-            [group]="personFormGroup"
-            [control]="'name'"
-            [placeholder]="'Your name'">
-          </app-name-field>
+          <mat-form-field class="full-width" appearance="fill" [hideRequiredMarker]="true">
+            <mat-label>Select a person</mat-label>
+            <mat-select #personSelect [formControlName]="'name'">
+              <mat-option>None</mat-option>
+              <mat-option *ngFor="let person of people$ | async" [value]="person.name">{{person.name}}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="personUpdateFormGroup.controls['name'].hasError('required')">
+              Required field
+            </mat-error>
+          </mat-form-field>
         </div>
-        <div class="col-12 col-sm-6 pt-4">
+        <!-- TODO create display condition for weight, age, and friends fields
+        depends on person being selected first -->
+        <div *ngIf="personSelect.value" class="col-12 col-sm-6 pt-4">
           <app-number-field
-            [group]="personFormGroup"
+            [group]="personUpdateFormGroup"
             [control]="'weight'"
-            [placeholder]="'Your weight (in lbs.)'"
+            [placeholder]="personSelect.value + ' weight (in lbs.)'"
             [minErrMsg]="'Weight entry may not be less than 50 lbs.'"
             [maxErrMsg]="'Weight entry may not exceed 1000 lbs.'">
           </app-number-field>
         </div>
-        <div class="col-12 col-sm-6 pt-4">
+        <div *ngIf="personSelect.value" class="col-12 col-sm-6 pt-4">
           <app-number-field
-            [group]="personFormGroup"
+            [group]="personUpdateFormGroup"
             [control]="'age'"
-            [placeholder]="'Your age (in years)'"
+            [placeholder]="personSelect.value + ' age (in years)'"
             [minErrMsg]="'You must be at least 18 years old'"
             [maxErrMsg]="'Age entries may not exceed 150'">
           </app-number-field>
         </div>
       </div>
-      <div class="row" *ngFor="let controlKey of friendControlKeys; let i = index">
-        <div
-          class="pt-4"
-          [ngClass]="{'col-12': i < friendControlKeys.length - 1,'col-9 col-sm-10 col-md-11': i === friendControlKeys.length - 1}">
-          <app-name-field
-            [group]="personFormGroup.controls['friends']"
-            [control]="controlKey"
-            [placeholder]="PersonFormService.getFriendPlaceholder(i)"
-            [readonly]="i < friendControlKeys.length - 1">
-          </app-name-field>
-        </div>
-        <div class="col-3 col-sm-2 col-md-1 pt-4" *ngIf="i === friendControlKeys.length - 1">
-          <button
-            mat-mini-fab
-            type="button"
-            color="primary"
-            aria-label="Delete friend"
-            (click)="deleteFriendField()">
-            <mat-icon>delete</mat-icon>
-          </button>
-        </div>
-      </div>
-      <div class="col-12 pt-4">
-        <button
-          mat-button
-          type="button"
-          [disabled]="friendControlKeys.length === 5 || PersonFormService.disableAddFriendBtn(friendControlKeys, personFormGroup.controls['friends'])"
-          (click)="addFriendField()">
-          + Add friend
-        </button>
-      </div>
+      <!-- TODO create checkbox for each person
+      <div class="row" *ngFor="let x of y; let i = index">
+      </div> -->
     </mat-card-content>
     <mat-card-actions>
       <button mat-raised-button color="primary" type="submit">Submit</button>
     </mat-card-actions>
   </mat-card>
 </form>
+{{ personUpdateFormGroup.value | json }}

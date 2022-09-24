@@ -4,7 +4,7 @@ import { Store } from "@ngrx/store";
 import { AppState } from 'src/app/state/app.state';
 import { loadPeople } from 'src/app/state/people/people.actions';
 import { selectPeople } from "src/app/state/people/people.selectors";
-import { PersonFormService } from './person-form.service';
+import { Person } from './person.model';
 
 @Component({
   selector: 'app-person-form',
@@ -13,13 +13,20 @@ import { PersonFormService } from './person-form.service';
 })
 export class personFormComponent implements OnInit {
   public people$ = this.store.select(selectPeople);
-  personFormGroup: any = this.fb.group({
+  people: Person[] = [];
+  // personAddFormGroup: any = this.fb.group({
+  //   name: [
+  //     null,
+  //     Validators.compose([
+  //       Validators.required,
+  //       Validators.pattern('^[a-z A-Z]+$'),
+  //     ]),
+  //   ],
+  // }); 
+  personUpdateFormGroup: any = this.fb.group({
     name: [
       null,
-      Validators.compose([
-        Validators.required,
-        Validators.pattern('^[a-z A-Z]+$'),
-      ]),
+      Validators.required
     ],
     weight: [
       null,
@@ -36,62 +43,54 @@ export class personFormComponent implements OnInit {
         Validators.min(18),
         Validators.max(150),
       ]),
-    ],
-    friends: this.fb.group({}),
+    ]
   });
-  friendControlKeys: string[] = []; // form control key names for friend fields
-  friendCount: number = 0;
   showErrMsg: Boolean = false;
 
   constructor(
     private store: Store<AppState>,
-    private fb: FormBuilder,
-    public PersonFormService: PersonFormService
+    private fb: FormBuilder
   ) {}
 
   ngOnInit() {
     this.store.dispatch(loadPeople());
-    this.subscribeToFormValChanges();
+    this.startSubscriptions();
   }
 
-  // updatePerson(person: Person): void {
-  //   this.store.dispatch(updatePerson({ person }))
-  // }
+  startSubscriptions(): void {
+    this.subscribeToFormValChanges();
+    this.subscribeToPeopleStateChanges();
+  }
 
   subscribeToFormValChanges(): void {
-    this.personFormGroup.valueChanges.subscribe(() => {
-      if (this.personFormGroup.valid) {
+    this.personUpdateFormGroup.valueChanges.subscribe((val: any) => {
+      if (this.personUpdateFormGroup.valid) {
         this.showErrMsg = false;
+      }
+    });
+    this.personUpdateFormGroup.get('name').valueChanges.subscribe((name: string) => {
+      if (name) {
+        let person: Person = (this.people.filter(person => person.name === name))[0];
+        this.personUpdateFormGroup.controls['weight'].setValue(person.weight);
+        this.personUpdateFormGroup.controls['age'].setValue(person.age);
+      } else if (name === undefined) {
+        this.personUpdateFormGroup.controls['name'].setValue(null);
+        this.personUpdateFormGroup.controls['weight'].setValue(null);
+        this.personUpdateFormGroup.controls['age'].setValue(null);
       }
     });
   }
 
-  addFriendField(): void {
-    this.friendCount++;
-    this.personFormGroup = this.fb.group({
-      ...this.personFormGroup.controls,
-      friends: this.fb.group({
-        ...this.personFormGroup.controls['friends'].controls,
-        ['friend' + this.friendCount.toString()]: [
-          null,
-          Validators.pattern('^[a-z A-Z]+$'),
-        ],
-      }),
-    });
-    this.friendControlKeys.push('friend' + this.friendCount.toString());
-  }
-
-  deleteFriendField(): void {
-    this.friendCount--;
-    let controlKey = this.friendControlKeys.pop();
-    this.personFormGroup.controls['friends'].removeControl(controlKey);
+  subscribeToPeopleStateChanges(): void {
+    this.people$.subscribe((people: Person[]) => {
+      this.people = people;
+    })
   }
 
   onSubmit(): void {
-    this.personFormGroup.markAllAsTouched();
-    if (this.personFormGroup.valid) {
-      console.log("Validation passed!");
-      console.log("this.personFormGroup.value: ", this.personFormGroup.value);
+    this.personUpdateFormGroup.markAllAsTouched();
+    if (this.personUpdateFormGroup.valid) {
+      console.log("Validation passed: ", this.personUpdateFormGroup.value);
     } else {
       this.showErrMsg = true;
     }

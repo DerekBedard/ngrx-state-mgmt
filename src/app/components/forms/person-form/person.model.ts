@@ -1,7 +1,7 @@
 export interface Person {
-    id: number,
+    id: number | null,
     name: string,
-    weight: number,
+    weight: number | null,
     age: number,
-    friends: any
+    friends: string[]
 }

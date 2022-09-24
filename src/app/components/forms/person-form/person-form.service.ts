@@ -13,7 +13,7 @@ export class PersonFormService {
   async mockPeopleGetRequest(): Promise<Person[]> {
     let parsedJson = JSON.parse(JSON.stringify(unparsedJson));
     this.people = parsedJson.people;
-    console.log("service log: ", this.people, typeof this.people);
+    // console.log("service log: ", this.people, typeof this.people);
     return this.people;
   }
 
@@ -26,27 +26,4 @@ export class PersonFormService {
   //   return person;
   // }
 
-  getFriendPlaceholder(i: number): string {
-    if (i === 0) {
-      return "A friend's name";
-    } else if (i === 4) {
-      return "Final friend's name";
-    } else {
-      return "Another friend's name";
-    }
-  }
-
-  disableAddFriendBtn(friendControlKeys: string[], friendsFG: any): Boolean {
-    if (friendControlKeys.length > 0) {
-      let hasVal = friendsFG.controls[friendControlKeys[friendControlKeys.length - 1]].value;
-      let hasErr =
-        friendsFG.controls[friendControlKeys[friendControlKeys.length - 1]].hasError('pattern');
-      if (hasVal && !hasErr) {
-        return false;
-      } else {
-        return true;
-      }
-    }
-    return false;
-  }
 }

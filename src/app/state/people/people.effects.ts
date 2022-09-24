@@ -31,7 +31,7 @@ export class PeopleEffects {
       switchMap(() =>
         // Call mock get request, convert it to an observable
         from(this.personFormService.mockPeopleGetRequest()).pipe(
-          tap((people: Person[])  => console.log("tap log: ", people)),
+          // tap((people: Person[])  => console.log("tap log: ", people)),
           // If value returned, dispatch a success action
           map((people: Person[]) => loadPeopleSuccess({ people })),
           // If error returned, dispatched a failure action

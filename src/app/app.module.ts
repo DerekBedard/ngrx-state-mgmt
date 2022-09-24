@@ -13,7 +13,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { ReactiveFormsModule } from '@angular/forms';
-import { NameFieldComponent } from './components/fields/name-field/name-field.component';
+import { TextFieldComponent } from './components/fields/text-field/text-field.component';
 import { NumberFieldComponent } from './components/fields/number-field/number-field.component';
 import { NetworkGraphComponent } from './components/data-visualizations/network-graph/network-graph.component';
 import { StoreModule } from '@ngrx/store';
@@ -25,7 +25,7 @@ import { peopleReducer } from './state/people/people.reducer';
   declarations: [
     AppComponent,
     personFormComponent,
-    NameFieldComponent,
+    TextFieldComponent,
     NumberFieldComponent,
     NetworkGraphComponent
   ],

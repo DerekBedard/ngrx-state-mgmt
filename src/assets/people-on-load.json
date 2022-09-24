@@ -3,37 +3,30 @@
     {
       "id": 1,
       "name": "Red Ranger",
-      "weight": null,
-      "age": null,
-      "friends": {}
+      "weight": 240,
+      "age": 23,
+      "friends": ["Pink Ranger", "Blue Ranger"]
     },
     {
       "id": 2,
       "name": "Blue Ranger",
-      "weight": null,
-      "age": null,
-      "friends": {}
-    },
-    {
-      "id": 3,
-      "name": "Yellow Ranger",
-      "weight": null,
-      "age": null,
-      "friends": {}
+      "weight": 190,
+      "age": 24,
+      "friends": []
     },
     {
       "id": 4,
       "name": "Green Ranger",
-      "weight": null,
-      "age": null,
-      "friends": {}
+      "weight": 210,
+      "age": 26,
+      "friends": []
     },
     {
       "id": 5,
       "name": "Pink Ranger",
-      "weight": null,
-      "age": null,
-      "friends": {}
+      "weight": 185,
+      "age": 27,
+      "friends": []
     }
   ]
 }

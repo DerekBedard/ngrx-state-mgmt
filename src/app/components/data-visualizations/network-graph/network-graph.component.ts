@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { Store } from '@ngrx/store';
 import * as d3 from 'd3';
+import { AppState } from 'src/app/state/app.state';
+import { selectPeople } from 'src/app/state/people/people.selectors';
 // import * as unparsedJson from './test.json';
 
 @Component({
@@ -8,6 +11,7 @@ import * as d3 from 'd3';
   styleUrls: ['./network-graph.component.scss'],
 })
 export class NetworkGraphComponent implements OnInit {
+  public people$ = this.store.select(selectPeople);
   width: number = 320;
   height: number = 200;
   svg: any;
@@ -27,7 +31,7 @@ export class NetworkGraphComponent implements OnInit {
     ],
   };
 
-  constructor() {}
+  constructor(private store: Store<AppState>) {}
 
   ngOnInit(): void {
     this.svg = d3
