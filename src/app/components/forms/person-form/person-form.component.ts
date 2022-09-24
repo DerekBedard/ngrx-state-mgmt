@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Store } from "@ngrx/store";
 import { AppState } from 'src/app/state/app.state';
@@ -43,13 +43,17 @@ export class personFormComponent implements OnInit {
         Validators.min(18),
         Validators.max(150),
       ]),
+    ],
+    friends: [
+      []
     ]
   });
   showErrMsg: Boolean = false;
 
   constructor(
     private store: Store<AppState>,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private changeDetector: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
@@ -73,10 +77,13 @@ export class personFormComponent implements OnInit {
         let person: Person = (this.people.filter(person => person.name === name))[0];
         this.personUpdateFormGroup.controls['weight'].setValue(person.weight);
         this.personUpdateFormGroup.controls['age'].setValue(person.age);
+        this.updateDOM();
+        this.personUpdateFormGroup.controls['friends'].setValue(person.friends);
       } else if (name === undefined) {
         this.personUpdateFormGroup.controls['name'].setValue(null);
         this.personUpdateFormGroup.controls['weight'].setValue(null);
         this.personUpdateFormGroup.controls['age'].setValue(null);
+        this.personUpdateFormGroup.controls['age'].setValue([]);
       }
     });
   }
@@ -94,6 +101,10 @@ export class personFormComponent implements OnInit {
     } else {
       this.showErrMsg = true;
     }
+  }
+
+  updateDOM(): void {
+    this.changeDetector.detectChanges();
   }
 
 }

@@ -1,7 +1,7 @@
 <form [formGroup]="personUpdateFormGroup" novalidate (ngSubmit)="onSubmit()">
   <mat-card class="user-card">
     <mat-card-header>
-      <mat-card-title>Update a person the network:</mat-card-title>
+      <mat-card-title>Update a person on the network:</mat-card-title>
     </mat-card-header>
     <div class="alert alert-err" role="alert" *ngIf="showErrMsg">
       Please correct all form errors before resubmitting.
@@ -20,9 +20,9 @@
             </mat-error>
           </mat-form-field>
         </div>
-        <!-- TODO create display condition for weight, age, and friends fields
-        depends on person being selected first -->
-        <div *ngIf="personSelect.value" class="col-12 col-sm-6 pt-4">
+      </div>
+      <div class="row" *ngIf="personSelect.value">
+        <div class="col-12 col-sm-6 pt-4">
           <app-number-field
             [group]="personUpdateFormGroup"
             [control]="'weight'"
@@ -31,7 +31,7 @@
             [maxErrMsg]="'Weight entry may not exceed 1000 lbs.'">
           </app-number-field>
         </div>
-        <div *ngIf="personSelect.value" class="col-12 col-sm-6 pt-4">
+        <div class="col-12 col-sm-6 pt-4">
           <app-number-field
             [group]="personUpdateFormGroup"
             [control]="'age'"
@@ -40,10 +40,18 @@
             [maxErrMsg]="'Age entries may not exceed 150'">
           </app-number-field>
         </div>
+        <div class="col-12 pt-4">
+          <mat-card-header>
+            <mat-card-title>Network connections:</mat-card-title>
+          </mat-card-header>
+          <mat-selection-list #friends [formControlName]="'friends'">
+            <mat-list-option *ngFor="let person of people$ | async | omitSelf: personSelect.value" [value]="person.name">
+              {{ person.name }}
+            </mat-list-option>
+          </mat-selection-list>
+          <mat-card-subtitle>Total connections: {{friends.selectedOptions.selected.length}})</mat-card-subtitle>
+        </div>
       </div>
-      <!-- TODO create checkbox for each person
-      <div class="row" *ngFor="let x of y; let i = index">
-      </div> -->
     </mat-card-content>
     <mat-card-actions>
       <button mat-raised-button color="primary" type="submit">Submit</button>

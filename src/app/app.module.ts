@@ -12,6 +12,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatCardModule } from '@angular/material/card';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
+import { MatListModule } from '@angular/material/list';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TextFieldComponent } from './components/fields/text-field/text-field.component';
 import { NumberFieldComponent } from './components/fields/number-field/number-field.component';
@@ -20,6 +21,7 @@ import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { PeopleEffects } from './state/people/people.effects';
 import { peopleReducer } from './state/people/people.reducer';
+import { OmitSelf } from './pipes/omit-self.pipe';
 
 @NgModule({
   declarations: [
@@ -27,7 +29,8 @@ import { peopleReducer } from './state/people/people.reducer';
     personFormComponent,
     TextFieldComponent,
     NumberFieldComponent,
-    NetworkGraphComponent
+    NetworkGraphComponent,
+    OmitSelf
   ],
   imports: [
     BrowserModule,
@@ -40,6 +43,7 @@ import { peopleReducer } from './state/people/people.reducer';
     MatCardModule,
     MatToolbarModule,
     MatIconModule,
+    MatListModule,
     ReactiveFormsModule,
     StoreModule.forRoot({ peopleState: peopleReducer }),
     EffectsModule.forRoot([PeopleEffects])
