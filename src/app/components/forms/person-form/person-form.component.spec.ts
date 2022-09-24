@@ -6,16 +6,15 @@ import { MatCardModule } from '@angular/material/card';
 import { MatInputModule } from '@angular/material/input';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
+import { personFormComponent } from './person-form.component';
 
-import { FriendFormComponent } from './friend-form.component';
-
-describe('FriendFormComponent', () => {
-  let component: FriendFormComponent;
-  let fixture: ComponentFixture<FriendFormComponent>;
+describe('personFormComponent', () => {
+  let component: personFormComponent;
+  let fixture: ComponentFixture<personFormComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ FriendFormComponent ],
+      declarations: [ personFormComponent ],
       imports: [
         NoopAnimationsModule,
         ReactiveFormsModule,
@@ -29,7 +28,7 @@ describe('FriendFormComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(FriendFormComponent);
+    fixture = TestBed.createComponent(personFormComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

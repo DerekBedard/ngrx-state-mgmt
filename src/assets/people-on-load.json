@@ -1,0 +1,39 @@
+{
+  "people": [
+    {
+      "id": 1,
+      "name": "Red Ranger",
+      "weight": null,
+      "age": null,
+      "friends": {}
+    },
+    {
+      "id": 2,
+      "name": "Blue Ranger",
+      "weight": null,
+      "age": null,
+      "friends": {}
+    },
+    {
+      "id": 3,
+      "name": "Yellow Ranger",
+      "weight": null,
+      "age": null,
+      "friends": {}
+    },
+    {
+      "id": 4,
+      "name": "Green Ranger",
+      "weight": null,
+      "age": null,
+      "friends": {}
+    },
+    {
+      "id": 5,
+      "name": "Pink Ranger",
+      "weight": null,
+      "age": null,
+      "friends": {}
+    }
+  ]
+}

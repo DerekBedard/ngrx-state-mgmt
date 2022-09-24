@@ -1,15 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { FriendFormService } from './services/friend-form.service';
+import { Store } from "@ngrx/store";
+import { AppState } from 'src/app/state/app.state';
+import { loadPeople } from 'src/app/state/people/people.actions';
+import { selectPeople } from "src/app/state/people/people.selectors";
+import { PersonFormService } from './person-form.service';
 
 @Component({
-  selector: 'app-friend-form',
-  templateUrl: './friend-form.component.html',
-  styleUrls: ['./friend-form.component.scss'],
+  selector: 'app-person-form',
+  templateUrl: './person-form.component.html',
+  styleUrls: ['./person-form.component.scss'],
 })
-export class FriendFormComponent implements OnInit {
-  people: any = {};
-  person: any = this.fb.group({
+export class personFormComponent implements OnInit {
+  public people$ = this.store.select(selectPeople);
+  personFormGroup: any = this.fb.group({
     name: [
       null,
       Validators.compose([
@@ -40,17 +44,23 @@ export class FriendFormComponent implements OnInit {
   showErrMsg: Boolean = false;
 
   constructor(
+    private store: Store<AppState>,
     private fb: FormBuilder,
-    public friendFormService: FriendFormService
+    public PersonFormService: PersonFormService
   ) {}
 
   ngOnInit() {
+    this.store.dispatch(loadPeople());
     this.subscribeToFormValChanges();
   }
 
+  // updatePerson(person: Person): void {
+  //   this.store.dispatch(updatePerson({ person }))
+  // }
+
   subscribeToFormValChanges(): void {
-    this.person.valueChanges.subscribe(() => {
-      if (this.person.valid) {
+    this.personFormGroup.valueChanges.subscribe(() => {
+      if (this.personFormGroup.valid) {
         this.showErrMsg = false;
       }
     });
@@ -58,10 +68,10 @@ export class FriendFormComponent implements OnInit {
 
   addFriendField(): void {
     this.friendCount++;
-    this.person = this.fb.group({
-      ...this.person.controls,
+    this.personFormGroup = this.fb.group({
+      ...this.personFormGroup.controls,
       friends: this.fb.group({
-        ...this.person.controls['friends'].controls,
+        ...this.personFormGroup.controls['friends'].controls,
         ['friend' + this.friendCount.toString()]: [
           null,
           Validators.pattern('^[a-z A-Z]+$'),
@@ -74,16 +84,17 @@ export class FriendFormComponent implements OnInit {
   deleteFriendField(): void {
     this.friendCount--;
     let controlKey = this.friendControlKeys.pop();
-    this.person.controls['friends'].removeControl(controlKey);
+    this.personFormGroup.controls['friends'].removeControl(controlKey);
   }
 
   onSubmit(): void {
-    this.person.markAllAsTouched();
-    if (this.person.valid) {
+    this.personFormGroup.markAllAsTouched();
+    if (this.personFormGroup.valid) {
       console.log("Validation passed!");
-      console.log("this.person.value: ", this.person.value);
+      console.log("this.personFormGroup.value: ", this.personFormGroup.value);
     } else {
       this.showErrMsg = true;
     }
   }
+
 }

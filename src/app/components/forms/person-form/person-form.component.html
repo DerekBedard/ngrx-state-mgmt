@@ -1,4 +1,8 @@
-<form [formGroup]="person" novalidate (ngSubmit)="onSubmit()">
+
+<div *ngFor="let person of people$ | async">
+  {{ person.name }}
+</div>
+<form [formGroup]="personFormGroup" novalidate (ngSubmit)="onSubmit()">
   <mat-card class="user-card">
     <mat-card-header>
       <mat-card-title>Update the network:</mat-card-title>
@@ -10,14 +14,14 @@
       <div class="row">
         <div class="col-12 pt-3">
           <app-name-field
-            [group]="person"
+            [group]="personFormGroup"
             [control]="'name'"
             [placeholder]="'Your name'">
           </app-name-field>
         </div>
         <div class="col-12 col-sm-6 pt-4">
           <app-number-field
-            [group]="person"
+            [group]="personFormGroup"
             [control]="'weight'"
             [placeholder]="'Your weight (in lbs.)'"
             [minErrMsg]="'Weight entry may not be less than 50 lbs.'"
@@ -26,7 +30,7 @@
         </div>
         <div class="col-12 col-sm-6 pt-4">
           <app-number-field
-            [group]="person"
+            [group]="personFormGroup"
             [control]="'age'"
             [placeholder]="'Your age (in years)'"
             [minErrMsg]="'You must be at least 18 years old'"
@@ -39,9 +43,9 @@
           class="pt-4"
           [ngClass]="{'col-12': i < friendControlKeys.length - 1,'col-9 col-sm-10 col-md-11': i === friendControlKeys.length - 1}">
           <app-name-field
-            [group]="person.controls['friends']"
+            [group]="personFormGroup.controls['friends']"
             [control]="controlKey"
-            [placeholder]="friendFormService.getFriendPlaceholder(i)"
+            [placeholder]="PersonFormService.getFriendPlaceholder(i)"
             [readonly]="i < friendControlKeys.length - 1">
           </app-name-field>
         </div>
@@ -60,7 +64,7 @@
         <button
           mat-button
           type="button"
-          [disabled]="friendControlKeys.length === 5 || friendFormService.disableAddFriendBtn(friendControlKeys, person.controls['friends'])"
+          [disabled]="friendControlKeys.length === 5 || PersonFormService.disableAddFriendBtn(friendControlKeys, personFormGroup.controls['friends'])"
           (click)="addFriendField()">
           + Add friend
         </button>
