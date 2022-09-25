@@ -98,7 +98,6 @@ export class personFormComponent implements OnInit {
       !this.personUpdateFormGroup.valid) {
       this.showErrMsg = true;
     } else {
-      let currPerson: Person = this.selectedPerson;
       let newFriendsObjFromArr: { [key: string]: Boolean} = this.personUpdateFormGroup.controls['friends'].value.reduce((acc: any,curr:any)=> (acc[curr]=true,acc),{});
       let nextPerson: Person = {
         ...this.personUpdateFormGroup.value,
@@ -108,7 +107,7 @@ export class personFormComponent implements OnInit {
       }
       this.clearForm();
       this.validationSuccessModal();
-      this.store.dispatch(updatePeople({ currPerson, nextPerson }));
+      this.store.dispatch(updatePeople({ nextPerson }));
     }
   }
 

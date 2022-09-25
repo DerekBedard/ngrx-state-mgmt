@@ -43,7 +43,7 @@ export class NetworkGraphComponent implements OnInit {
   }
 
   hasKeys(obj: any = {}): Boolean {
-    if (!!Object.keys(obj).length) {
+    if (Object.keys(obj).length > 0) {
       return true;
     } else {
       return false;

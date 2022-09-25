@@ -17,7 +17,7 @@ export const loadPeopleFailure = createAction(
 
 export const updatePeople = createAction(
     "Attempt People update",
-    props<{ currPerson: Person, nextPerson: Person }>()
+    props<{ nextPerson: Person }>()
 );
 
 export const updatePeopleSuccess = createAction(
