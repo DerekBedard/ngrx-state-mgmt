@@ -17,21 +17,7 @@ export class NetworkGraphComponent implements OnInit {
   width: number = 320;
   height: number = 200;
   svg: any;
-  tempData: any = {
-    nodes: [
-      { id: "Red Ranger" },
-      { id: "Blue Ranger" },
-      { id: "Yellow Ranger" },
-      { id: "Green Ranger"},
-      { id: "Pink Ranger"}
-    ],
-    links: [
-      { source: "Red Ranger", target: "Blue Ranger" },
-      { source: "Red Ranger", target: "Yellow Ranger" },
-      { source: "Yellow Ranger", target: "Green Ranger" },
-      { source: "Green Ranger", target: "Pink Ranger" }
-    ],
-  };
+  graphData: any = { nodes: [], links: [] };
 
   constructor(private store: Store<AppState>) {}
 
@@ -40,9 +26,16 @@ export class NetworkGraphComponent implements OnInit {
   }
 
   peopleSubscribe(): void {
-    this.people$.subscribe(() => {
+    this.people$.subscribe((people: { [key: string]: Person }) => {
       if (this.$dataViz) {
         this.$dataViz.nativeElement.innerHTML = "";
+      }
+      this.graphData= { nodes: [], links: [] };
+      for (const personKey in people) {
+        this.graphData.nodes.push({ id: people[personKey].name });
+        for (const friendKey in people[personKey].friends) {
+          this.graphData.links.push({ source: people[personKey].name, target: people[friendKey].name });
+        }
       }
       this.svg = d3
       .select('#dataViz')
@@ -50,7 +43,7 @@ export class NetworkGraphComponent implements OnInit {
       .attr('width', this.width)
       .attr('height', this.height)
       .append('g');
-      this.createNetworkGraph(this.tempData);
+      this.createNetworkGraph(this.graphData);
     })
   }
 
