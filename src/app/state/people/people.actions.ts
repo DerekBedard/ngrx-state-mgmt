@@ -15,17 +15,17 @@ export const loadPeopleFailure = createAction(
     props<{ error: string }>()
 )
 
-// export const updatePerson = createAction(
-//     "Trigger Person update",
-//     props<{ person: Person }>()
-// );
+export const updatePeople = createAction(
+    "Attempt People update",
+    props<{ currPerson: Person, nextPerson: Person }>()
+);
 
-// export const updatePersonSuccess = createAction(
-//     "Successful Person Update",
-//     props<{ person: Person }>()
-// );
+export const updatePeopleSuccess = createAction(
+    "Successful People update",
+    props<{ people: Person[] }>()
+)
 
-// export const updatePersonFailure = createAction(
-//     "Failed Person Update",
-//     props<{ error: string }>()
-// );
+export const updatePeopleFailure = createAction(
+    "Failed People update",
+    props<{ error: string }>()
+)

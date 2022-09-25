@@ -13,17 +13,13 @@ export class PersonFormService {
   async mockPeopleGetRequest(): Promise<Person[]> {
     let parsedJson = JSON.parse(JSON.stringify(unparsedJson));
     this.people = parsedJson.people;
-    // console.log("service log: ", this.people, typeof this.people);
     return this.people;
   }
 
-  // mockPersonPutRequest(person: Person): Person {
-  //   for (let i = 0; i < this.people.length; i++) {
-  //     if (this.people[i].id === person.id) {
-  //       this.people[i] = person;
-  //     }
-  //   }
-  //   return person;
-  // }
+  async mockPeoplePutRequest(currPerson: Person, nextPerson: Person): Promise<Person[]> {
+    console.log("currPerson: ", currPerson);
+    console.log("nextPerson: ", nextPerson);
+    return this.people;
+  }
 
 }

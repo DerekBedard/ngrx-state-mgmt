@@ -3,7 +3,7 @@ import { FormBuilder, NgForm, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Store } from "@ngrx/store";
 import { AppState } from 'src/app/state/app.state';
-import { loadPeople } from 'src/app/state/people/people.actions';
+import { loadPeople, updatePeople } from 'src/app/state/people/people.actions';
 import { selectPeople } from "src/app/state/people/people.selectors";
 import { Person } from './person.model';
 
@@ -16,15 +16,13 @@ export class personFormComponent implements OnInit {
   @ViewChild('formDirective') private formDirective: NgForm | undefined;
   public people$ = this.store.select(selectPeople);
   people: Person[] = [];
-  // personAddFormGroup: any = this.fb.group({
-  //   name: [
-  //     null,
-  //     Validators.compose([
-  //       Validators.required,
-  //       Validators.pattern('^[a-z A-Z]+$'),
-  //     ]),
-  //   ],
-  // }); 
+  selectedPerson: Person = {
+    id: null,
+    name: "",
+    weight: null,
+    age: null,
+    friends: []
+  };
   personUpdateFormGroup: any = this.fb.group({
     name: [
       null,
@@ -70,18 +68,18 @@ export class personFormComponent implements OnInit {
   }
 
   subscribeToFormValChanges(): void {
-    this.personUpdateFormGroup.valueChanges.subscribe((val: any) => {
+    this.personUpdateFormGroup.valueChanges.subscribe(() => {
       if (this.personUpdateFormGroup.valid) {
         this.showErrMsg = false;
       }
     });
     this.personUpdateFormGroup.get('name').valueChanges.subscribe((name: string) => {
       if (name) {
-        let person: Person = (this.people.filter(person => person.name === name))[0];
-        this.personUpdateFormGroup.controls['weight'].setValue(person.weight);
-        this.personUpdateFormGroup.controls['age'].setValue(person.age);
+        this.selectedPerson = (this.people.filter(person => person.name === name))[0];
+        this.personUpdateFormGroup.controls['weight'].setValue(this.selectedPerson.weight);
+        this.personUpdateFormGroup.controls['age'].setValue(this.selectedPerson.age);
         this.updateDOM();
-        this.personUpdateFormGroup.controls['friends'].setValue(person.friends);
+        this.personUpdateFormGroup.controls['friends'].setValue(this.selectedPerson.friends);
       } else if (name === undefined) {
         this.clearForm();
       }
@@ -100,9 +98,14 @@ export class personFormComponent implements OnInit {
       !this.personUpdateFormGroup.valid) {
       this.showErrMsg = true;
     } else {
-      console.log("Validation passed: ", this.personUpdateFormGroup.value);
+      let currPerson: Person = this.selectedPerson;
+      let nextPerson: Person = {
+        ...this.personUpdateFormGroup.value,
+        id: this.selectedPerson?.id
+      }
       this.clearForm();
       this.validationSuccessModal();
+      this.store.dispatch(updatePeople({ currPerson, nextPerson }));
     }
   }
 
@@ -127,6 +130,7 @@ export class personFormComponent implements OnInit {
 
 }
 
+// This Component is for creating a modal following successful form validation
 @Component({
   selector: 'validation-success-modal',
   templateUrl: 'dialog-modals/validation-success-modal.html',

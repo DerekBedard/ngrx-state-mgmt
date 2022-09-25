@@ -3,24 +3,20 @@ import {
   loadPeople,
   loadPeopleSuccess,
   loadPeopleFailure,
-  // updatePerson,
-  // updatePersonSuccess,
-  // updatePersonFailure
+  updatePeople,
+  updatePeopleSuccess,
+  updatePeopleFailure
 } from 'src/app/state/people/people.actions';
 import { PersonFormService } from 'src/app/components/forms/person-form/person-form.service';
-import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { act, Actions, createEffect, ofType } from '@ngrx/effects';
 import { from, of } from 'rxjs';
-import { catchError, map, switchMap, tap, withLatestFrom } from 'rxjs/operators';
-import { Store } from '@ngrx/store';
-import { selectPeople } from './people.selectors';
-import { AppState } from '../app.state';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { Person } from 'src/app/components/forms/person-form/person.model';
 
 @Injectable()
 export class PeopleEffects {
   constructor(
     private actions$: Actions,
-    private store: Store<AppState>,
     private personFormService: PersonFormService
   ) {}
 
@@ -41,19 +37,20 @@ export class PeopleEffects {
     )
   );
 
-  // Run this code when an updatePerson action is dispatched
-  // updateNetwork$ = createEffect(() =>
-  //   this.actions$.pipe(
-  //     ofType(updatePerson),
-  //     switchMap((action) =>
-        // Create Observable from service method return value
-  //       from(this.httpRequestService.mockPutRequest(action.person)).pipe(
-  //         // If PUT request success:
-  //         map((person) => updatePersonSuccess({ person })),
-  //         // If PUT request fail:
-  //         catchError((error) => of(updatePersonFailure({ error })))
-  //       )
-  //     )
-  //   )
-  // );
+  // Run this code when an updatePeople action is dispatched
+  updatePeople$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(updatePeople),
+      switchMap((action) =>
+        // Call mock put request, convert it to an observable
+        from(this.personFormService.mockPeoplePutRequest(action.currPerson, action.nextPerson)).pipe(
+          // tap((people: Person[])  => console.log("tap log: ", people)),
+          // If value returned, dispatch a success action
+          map((people: Person[]) => updatePeopleSuccess({ people })),
+          // If error returned, dispatched a failure action
+          catchError((error: string) => of(updatePeopleFailure({ error })))
+        )
+      )
+    )
+  );
 }

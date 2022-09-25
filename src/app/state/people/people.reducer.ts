@@ -4,10 +4,10 @@ import {
   loadPeople,
   loadPeopleSuccess,
   loadPeopleFailure,
-  // updatePerson,
-  // updatePersonSuccess,
+  updatePeople,
+  updatePeopleSuccess,
+  updatePeopleFailure,
 } from './people.actions';
-import { state } from '@angular/animations';
 
 export interface PeopleState {
   people: Person[];
@@ -24,34 +24,22 @@ export const initialState: PeopleState = {
 export const peopleReducer = createReducer(
   // Supply the initial state:
   initialState,
-  // Update state to reflect data retrieval in progress status:
-  on(loadPeople, (state) => ({
+  // Update state status to reflect data retrieval or update in progress:
+  on(loadPeople, updatePeople, (state) => ({
     ...state,
     status: 'loading'
   })),
-  // Handle load success
-  on(loadPeopleSuccess, (state, { people }) => ({
+  // Handle load or update success
+  on(loadPeopleSuccess, updatePeopleSuccess, (state, { people }) => ({
     ...state,
     people: people,
     error: null,
     status: 'success',
   })),
-  // Handle load failure
-  on(loadPeopleFailure, (state, { error }) => ({
+  // Handle load or update failure
+  on(loadPeopleFailure, updatePeopleFailure, (state, { error }) => ({
     ...state,
     error: error,
     status: "error",
   }))
-  // on(updatePerson, (state, { person }) => ({ ...state, status: 'loading' })),
-  // on(updatePersonSuccess, (state, { person }) => ({
-  //   ...state,
-  //   people: state.people.map((obj) => {
-  //     if (obj.id == person.id) {
-  //       return person;
-  //     }
-  //     return obj;
-  //   }),
-  //   error: null,
-  //   status: 'success',
-  // }))
 );
