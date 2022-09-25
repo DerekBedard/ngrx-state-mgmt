@@ -22,6 +22,7 @@ import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { PeopleEffects } from './state/people/people.effects';
 import { peopleReducer } from './state/people/people.reducer';
+import { PeopleService } from './services/people/people.service';
 
 @NgModule({
   declarations: [
@@ -49,7 +50,7 @@ import { peopleReducer } from './state/people/people.reducer';
     StoreModule.forRoot({ peopleState: peopleReducer }),
     EffectsModule.forRoot([PeopleEffects])
   ],
-  providers: [],
+  providers: [PeopleService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

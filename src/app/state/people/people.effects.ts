@@ -7,17 +7,17 @@ import {
   updatePeopleSuccess,
   updatePeopleFailure
 } from 'src/app/state/people/people.actions';
-import { PersonFormService } from 'src/app/components/forms/person-form/person-form.service';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { from, of } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { Person } from 'src/app/components/forms/person-form/person.model';
+import { PeopleService } from 'src/app/services/people/people.service';
 
 @Injectable()
 export class PeopleEffects {
   constructor(
     private actions$: Actions,
-    private personFormService: PersonFormService
+    private peopleService: PeopleService
   ) {}
 
   // Run this code when a loadPeople action is dispatched
@@ -27,7 +27,7 @@ export class PeopleEffects {
       // NOTE: switchMap is expected to return an observable, while map can return anything
       switchMap(() =>
         // Call mock get request, convert it to an observable
-        from(this.personFormService.mockPeopleGetRequest()).pipe(
+        from(this.peopleService.mockPeopleGetRequest()).pipe(
           // tap((people: { [key: string]: Person })  => console.log("tap log: ", people)),
           // If value returned, dispatch a success action
           map((people: { [key: string]: Person }) => loadPeopleSuccess({ people })),
@@ -44,7 +44,7 @@ export class PeopleEffects {
       ofType(updatePeople),
       switchMap((action) =>
         // Call mock put request, convert it to an observable
-        from(this.personFormService.mockPeoplePutRequest(action.currPerson, action.nextPerson)).pipe(
+        from(this.peopleService.mockPeoplePutRequest(action.currPerson, action.nextPerson)).pipe(
           // tap((people: { [key: string]: Person })  => console.log("tap log: ", people)),
           // If value returned, dispatch a success action
           map((people: { [key: string]: Person }) => updatePeopleSuccess({ people })),

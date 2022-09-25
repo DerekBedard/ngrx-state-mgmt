@@ -103,6 +103,7 @@ export class personFormComponent implements OnInit {
       let nextPerson: Person = {
         ...this.personUpdateFormGroup.value,
         id: this.selectedPerson?.id,
+        name: this.personUpdateFormGroup.controls['name'].value.name,
         friends: newFriendsObjFromArr
       }
       this.clearForm();
