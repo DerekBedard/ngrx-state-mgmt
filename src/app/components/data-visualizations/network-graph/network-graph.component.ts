@@ -81,7 +81,21 @@ export class NetworkGraphComponent implements OnInit {
       .enter()
       .append('circle')
       .attr('r', 5)
-      .style('fill', '#673ab7');
+      .style('fill', function(d: any) {
+        if (d.id.includes("Red")) {
+          return "red";
+        }
+        if (d.id.includes("Blue")) {
+          return "blue";
+        }
+        if (d.id.includes("Green")) {
+          return "green";
+        }
+        if (d.id.includes("Pink")) {
+          return "pink";
+        }
+        return '#673ab7';
+      });
 
     let simulation = d3
       .forceSimulation(data.nodes)
