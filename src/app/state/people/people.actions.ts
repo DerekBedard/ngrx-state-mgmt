@@ -7,7 +7,7 @@ export const loadPeople = createAction(
 
 export const loadPeopleSuccess = createAction(
     "Successful People load",
-    props<{ people: Person[] }>()
+    props<{ people: { [key: string]: Person } }>()
 )
 
 export const loadPeopleFailure = createAction(
@@ -22,7 +22,7 @@ export const updatePeople = createAction(
 
 export const updatePeopleSuccess = createAction(
     "Successful People update",
-    props<{ people: Person[] }>()
+    props<{ people: { [key: string]: Person } }>()
 )
 
 export const updatePeopleFailure = createAction(

@@ -1,7 +1,7 @@
 export interface Person {
-    id: number | null,
+    id: string,
     name: string,
     weight: number | null,
     age: number | null,
-    friends: string[]
+    friends: { [key: string]: Boolean }
 }

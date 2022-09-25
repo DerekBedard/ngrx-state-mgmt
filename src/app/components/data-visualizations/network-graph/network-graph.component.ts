@@ -3,7 +3,6 @@ import { Store } from '@ngrx/store';
 import * as d3 from 'd3';
 import { AppState } from 'src/app/state/app.state';
 import { selectPeople } from 'src/app/state/people/people.selectors';
-// import * as unparsedJson from './test.json';
 
 @Component({
   selector: 'app-network-graph',
@@ -15,7 +14,7 @@ export class NetworkGraphComponent implements OnInit {
   width: number = 320;
   height: number = 200;
   svg: any;
-  data: any = {
+  tempData: any = {
     nodes: [
       { id: "Red Ranger" },
       { id: "Blue Ranger" },
@@ -40,8 +39,15 @@ export class NetworkGraphComponent implements OnInit {
       .attr('width', this.width)
       .attr('height', this.height)
       .append('g');
-    // let parsedJson = JSON.parse(JSON.stringify(unparsedJson));
-    this.createNetworkGraph(this.data);
+    this.createNetworkGraph(this.tempData);
+  }
+
+  hasKeys(obj: any = {}): Boolean {
+    if (!!Object.keys(obj).length) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   createNetworkGraph(data: any): void {

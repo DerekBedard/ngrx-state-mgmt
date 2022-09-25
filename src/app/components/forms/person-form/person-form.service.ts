@@ -6,17 +6,17 @@ import * as unparsedJson from '../../../../assets/people-on-load.json';
   providedIn: 'root',
 })
 export class PersonFormService {
-  people: Person[] = [];
+  people: { [key: string]: Person }  = {};
   
   constructor() {}
 
-  async mockPeopleGetRequest(): Promise<Person[]> {
+  async mockPeopleGetRequest(): Promise<{ [key: string]: Person}> {
     let parsedJson = JSON.parse(JSON.stringify(unparsedJson));
     this.people = parsedJson.people;
     return this.people;
   }
 
-  async mockPeoplePutRequest(currPerson: Person, nextPerson: Person): Promise<Person[]> {
+  async mockPeoplePutRequest(currPerson: Person, nextPerson: Person): Promise<{ [key: string]: Person}> {
     console.log("currPerson: ", currPerson);
     console.log("nextPerson: ", nextPerson);
     return this.people;

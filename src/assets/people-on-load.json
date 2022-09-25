@@ -1,32 +1,39 @@
 {
-  "people": [
-    {
-      "id": 1,
+  "people": {
+    "1": {
+      "id": "1",
       "name": "Red Ranger",
       "weight": 240,
       "age": 23,
-      "friends": ["Pink Ranger", "Blue Ranger"]
+      "friends": {
+        "2": true,
+        "4": true
+      }
     },
-    {
-      "id": 2,
+    "2": {
+      "id": "2",
       "name": "Blue Ranger",
       "weight": 190,
       "age": 24,
-      "friends": ["Red Ranger"]
+      "friends": {
+        "1": true
+      }
     },
-    {
-      "id": 4,
+    "3": {
+      "id": "3",
       "name": "Green Ranger",
       "weight": 210,
       "age": 26,
-      "friends": []
+      "friends": {}
     },
-    {
-      "id": 5,
+    "4": {
+      "id": "4",
       "name": "Pink Ranger",
       "weight": 185,
       "age": 27,
-      "friends": ["Red Ranger"]
+      "friends": {
+        "1": true
+      }
     }
-  ]
+  }
 }

@@ -22,7 +22,6 @@ import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { PeopleEffects } from './state/people/people.effects';
 import { peopleReducer } from './state/people/people.reducer';
-import { OmitSelf } from './pipes/omit-self.pipe';
 
 @NgModule({
   declarations: [
@@ -31,7 +30,6 @@ import { OmitSelf } from './pipes/omit-self.pipe';
     TextFieldComponent,
     NumberFieldComponent,
     NetworkGraphComponent,
-    OmitSelf,
     ValidationSuccessModal
   ],
   imports: [

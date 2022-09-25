@@ -2,13 +2,13 @@
   <div class="col-12 col-sm-6">
     <div class="centerContent">
         <div class="flexChildTxtData">
-            <div *ngFor="let person of people$ | async">
-                <strong>{{ person.name }}:</strong> {{ person.age }} yr. old, {{ person.weight }} lbs.<br/>
-                <ng-container *ngIf="person.friends.length > 0">
-                  <strong>{{ person.name }} friends:</strong>
+            <div *ngFor="let person of people$ | async | keyvalue">
+                <strong>{{ person.value.name }}:</strong> {{ person.value.age }} yr. old, {{ person.value.weight }} lbs.<br/>
+                <ng-container *ngIf="hasKeys(person.value.friends)">
+                  <strong>{{ person.value.name }} friends:</strong>
                   <ul>
-                    <li *ngFor="let friend of person.friends">
-                      {{ friend }}
+                    <li *ngFor="let friend of person.value.friends | keyvalue">
+                      {{ (people$ | async)?.[friend.key]?.name }}
                     </li>
                   </ul>
                 </ng-container>
