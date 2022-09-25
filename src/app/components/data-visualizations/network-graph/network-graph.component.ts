@@ -1,6 +1,7 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
 import * as d3 from 'd3';
+import { NetworkGraphService } from 'src/app/services/network-graph/network-graph.service';
 import { AppState } from 'src/app/state/app.state';
 import { selectPeople, selectPeopleLoadStatus } from 'src/app/state/people/people.selectors';
 import { Person } from '../../forms/person-form/person.model';
@@ -14,12 +15,16 @@ export class NetworkGraphComponent implements OnInit {
   @ViewChild('dataViz') $dataViz: ElementRef | undefined;
   public people$ = this.store.select(selectPeople);
   public peopleLoadStatus$ = this.store.select(selectPeopleLoadStatus);
+  component = this;
   width: number = 320;
   height: number = 200;
   svg: any;
   graphData: any = { nodes: [], links: [] };
 
-  constructor(private store: Store<AppState>) {}
+  constructor(
+    private store: Store<AppState>,
+    private networkGraphService: NetworkGraphService
+  ) {}
 
   ngOnInit(): void {
     this.peopleSubscribe();
@@ -32,9 +37,17 @@ export class NetworkGraphComponent implements OnInit {
       }
       this.graphData= { nodes: [], links: [] };
       for (const personKey in people) {
-        this.graphData.nodes.push({ id: people[personKey].name });
+        this.graphData.nodes.push({
+          id: people[personKey].id,
+          name: people[personKey].name,
+          weight: people[personKey].weight,
+          age: people[personKey].age
+        });
         for (const friendKey in people[personKey].friends) {
-          this.graphData.links.push({ source: people[personKey].name, target: people[friendKey].name });
+          this.graphData.links.push({
+            source: people[personKey].id,
+            target: people[friendKey].id
+          });
         }
       }
       this.svg = d3
@@ -67,6 +80,14 @@ export class NetworkGraphComponent implements OnInit {
     return true;
   }
 
+  nodeMouseOver(event: any, d: any): void {
+    this.networkGraphService.nodeMouseOver(event, d);
+  }
+
+  nodeMouseOut(): void {
+    this.networkGraphService.nodeMouseOut();
+  }
+
   createNetworkGraph(data: any): void {
     let link: any = this.svg
       .selectAll('line')
@@ -82,20 +103,26 @@ export class NetworkGraphComponent implements OnInit {
       .append('circle')
       .attr('r', 5)
       .style('fill', function(d: any) {
-        if (d.id.includes("Red")) {
+        if (d.name.includes("Red")) {
           return "red";
         }
-        if (d.id.includes("Blue")) {
+        if (d.name.includes("Blue")) {
           return "blue";
         }
-        if (d.id.includes("Green")) {
+        if (d.name.includes("Green")) {
           return "green";
         }
-        if (d.id.includes("Pink")) {
+        if (d.name.includes("Pink")) {
           return "pink";
         }
         return '#673ab7';
-      });
+      })
+      .on("mouseover", (event: any, d: any) => {
+        this.component.nodeMouseOver(event, d)
+      })
+      .on("mouseout", () => {
+        this.component.nodeMouseOut()
+      })
 
     let simulation = d3
       .forceSimulation(data.nodes)
@@ -111,6 +138,7 @@ export class NetworkGraphComponent implements OnInit {
       .force('charge', d3.forceManyBody().strength(-5))
       .force('center', d3.forceCenter(this.width / 2, this.height / 2))
       .on('end', ticked);
+
     function ticked() {
       link
         .attr('x1', (d: any) => {

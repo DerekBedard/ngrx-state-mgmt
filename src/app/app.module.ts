@@ -24,6 +24,8 @@ import { EffectsModule } from '@ngrx/effects';
 import { PeopleEffects } from './state/people/people.effects';
 import { peopleReducer } from './state/people/people.reducer';
 import { PeopleService } from './services/people/people.service';
+import { NetworkGraphTooltipComponent } from './components/data-visualizations/network-graph/network-graph-tooltip/network-graph-tooltip/network-graph-tooltip.component';
+import { NetworkGraphService } from './services/network-graph/network-graph.service';
 
 @NgModule({
   declarations: [
@@ -32,7 +34,8 @@ import { PeopleService } from './services/people/people.service';
     TextFieldComponent,
     NumberFieldComponent,
     NetworkGraphComponent,
-    ValidationSuccessModal
+    ValidationSuccessModal,
+    NetworkGraphTooltipComponent
   ],
   imports: [
     BrowserModule,
@@ -52,7 +55,7 @@ import { PeopleService } from './services/people/people.service';
     StoreModule.forRoot({ peopleState: peopleReducer }),
     EffectsModule.forRoot([PeopleEffects])
   ],
-  providers: [PeopleService],
+  providers: [PeopleService, NetworkGraphService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

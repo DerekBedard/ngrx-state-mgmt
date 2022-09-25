@@ -20,7 +20,7 @@
     <div class="centerContent posRel">
       <div #dataViz id="dataViz" [ngClass]="{'hidden': showSpinner((peopleLoadStatus$ | async))}"></div>
       <div *ngIf="showSpinner((peopleLoadStatus$ | async))" class="flexChild centerContentVert posAbs zIndex">
-        <p class="constructingTxt">Constructing network graph...</p>
+        <p class="constructingTxt">D3 data visualization rendering...</p>
         <mat-spinner [diameter]="60"></mat-spinner>
       </div>
     </div>
