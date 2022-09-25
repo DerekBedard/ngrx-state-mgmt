@@ -14,6 +14,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'
 import { ReactiveFormsModule } from '@angular/forms';
 import { TextFieldComponent } from './components/fields/text-field/text-field.component';
 import { NumberFieldComponent } from './components/fields/number-field/number-field.component';
@@ -46,6 +47,7 @@ import { PeopleService } from './services/people/people.service';
     MatIconModule,
     MatListModule,
     MatDialogModule,
+    MatProgressSpinnerModule,
     ReactiveFormsModule,
     StoreModule.forRoot({ peopleState: peopleReducer }),
     EffectsModule.forRoot([PeopleEffects])

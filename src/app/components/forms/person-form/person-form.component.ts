@@ -63,11 +63,11 @@ export class personFormComponent implements OnInit {
   }
 
   startSubscriptions(): void {
-    this.subscribeToFormValChanges();
-    this.subscribeToPeopleStateChanges();
+    this.formValChangesSubscribe();
+    this.peopleSubscribe();
   }
 
-  subscribeToFormValChanges(): void {
+  formValChangesSubscribe(): void {
     this.personUpdateFormGroup.valueChanges.subscribe(() => {
       if (this.personUpdateFormGroup.valid) {
         this.showErrMsg = false;
@@ -86,7 +86,7 @@ export class personFormComponent implements OnInit {
     });
   }
 
-  subscribeToPeopleStateChanges(): void {
+  peopleSubscribe(): void {
     this.people$.subscribe((people: { [key: string]: Person }) => {
       this.people = people;
     })

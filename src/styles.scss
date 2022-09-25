@@ -14,6 +14,22 @@ ul {
     margin-bottom: 0px;
 }
 
-.full-width {
+.fullWidth {
     width: 100%;
+}
+
+.posRel {
+    position: relative;
+}
+
+.posAbs {
+    position: absolute;
+}
+
+.zIndex {
+    z-index: 2;
+}
+
+.hidden {
+    visibility: hidden;
 }

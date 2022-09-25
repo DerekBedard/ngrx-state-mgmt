@@ -1,7 +1,7 @@
 <div class="row">
   <div class="col-12 col-sm-6">
     <div class="centerContent">
-        <div class="flexChildTxtData">
+        <div class="flexChild">
             <div *ngFor="let person of people$ | async | keyvalue">
                 <strong>{{ person.value.name }}:</strong> {{ person.value.age }} yr. old, {{ person.value.weight }} lbs.<br/>
                 <ng-container *ngIf="hasKeys(person.value.friends)">
@@ -17,8 +17,12 @@
     </div>
   </div>
   <div class="col-12 col-sm-6">
-    <div class="centerContent">
-      <div id="dataViz"></div>
+    <div class="centerContent posRel">
+      <div #dataViz id="dataViz" [ngClass]="{'hidden': showSpinner((peopleLoadStatus$ | async))}"></div>
+      <div *ngIf="showSpinner((peopleLoadStatus$ | async))" class="flexChild centerContentVert posAbs zIndex">
+        <p class="constructingTxt">Constructing network graph...</p>
+        <mat-spinner [diameter]="60"></mat-spinner>
+      </div>
     </div>
   </div>
 </div>

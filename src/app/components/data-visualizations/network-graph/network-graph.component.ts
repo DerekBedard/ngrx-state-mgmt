@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
 import * as d3 from 'd3';
 import { AppState } from 'src/app/state/app.state';
-import { selectPeople } from 'src/app/state/people/people.selectors';
+import { selectPeople, selectPeopleLoadStatus } from 'src/app/state/people/people.selectors';
+import { Person } from '../../forms/person-form/person.model';
 
 @Component({
   selector: 'app-network-graph',
@@ -10,7 +11,9 @@ import { selectPeople } from 'src/app/state/people/people.selectors';
   styleUrls: ['./network-graph.component.scss'],
 })
 export class NetworkGraphComponent implements OnInit {
+  @ViewChild('dataViz') $dataViz: ElementRef | undefined;
   public people$ = this.store.select(selectPeople);
+  public peopleLoadStatus$ = this.store.select(selectPeopleLoadStatus);
   width: number = 320;
   height: number = 200;
   svg: any;
@@ -33,13 +36,22 @@ export class NetworkGraphComponent implements OnInit {
   constructor(private store: Store<AppState>) {}
 
   ngOnInit(): void {
-    this.svg = d3
+    this.peopleSubscribe();
+  }
+
+  peopleSubscribe(): void {
+    this.people$.subscribe(() => {
+      if (this.$dataViz) {
+        this.$dataViz.nativeElement.innerHTML = "";
+      }
+      this.svg = d3
       .select('#dataViz')
       .append('svg')
       .attr('width', this.width)
       .attr('height', this.height)
       .append('g');
-    this.createNetworkGraph(this.tempData);
+      this.createNetworkGraph(this.tempData);
+    })
   }
 
   hasKeys(obj: any = {}): Boolean {
@@ -48,6 +60,18 @@ export class NetworkGraphComponent implements OnInit {
     } else {
       return false;
     }
+  }
+
+  showSpinner(status: string | null): Boolean {
+    if (status && status === "success") {
+      if (this.$dataViz) {
+        let firstCircle = this.$dataViz.nativeElement.getElementsByTagName('circle')[0];
+        if (firstCircle.hasAttribute("cx")) {
+          return false;
+        }
+      }
+    }
+    return true;
   }
 
   createNetworkGraph(data: any): void {
