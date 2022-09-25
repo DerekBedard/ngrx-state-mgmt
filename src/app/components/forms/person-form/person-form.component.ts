@@ -1,5 +1,6 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, NgForm, Validators } from '@angular/forms';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Store } from "@ngrx/store";
 import { AppState } from 'src/app/state/app.state';
 import { loadPeople } from 'src/app/state/people/people.actions';
@@ -12,6 +13,7 @@ import { Person } from './person.model';
   styleUrls: ['./person-form.component.scss'],
 })
 export class personFormComponent implements OnInit {
+  @ViewChild('formDirective') private formDirective: NgForm | undefined;
   public people$ = this.store.select(selectPeople);
   people: Person[] = [];
   // personAddFormGroup: any = this.fb.group({
@@ -45,7 +47,7 @@ export class personFormComponent implements OnInit {
       ]),
     ],
     friends: [
-      []
+      null
     ]
   });
   showErrMsg: Boolean = false;
@@ -53,7 +55,8 @@ export class personFormComponent implements OnInit {
   constructor(
     private store: Store<AppState>,
     private fb: FormBuilder,
-    private changeDetector: ChangeDetectorRef
+    private changeDetector: ChangeDetectorRef,
+    public dialog: MatDialog
   ) {}
 
   ngOnInit() {
@@ -80,10 +83,7 @@ export class personFormComponent implements OnInit {
         this.updateDOM();
         this.personUpdateFormGroup.controls['friends'].setValue(person.friends);
       } else if (name === undefined) {
-        this.personUpdateFormGroup.controls['name'].setValue(null);
-        this.personUpdateFormGroup.controls['weight'].setValue(null);
-        this.personUpdateFormGroup.controls['age'].setValue(null);
-        this.personUpdateFormGroup.controls['age'].setValue([]);
+        this.clearForm();
       }
     });
   }
@@ -95,16 +95,43 @@ export class personFormComponent implements OnInit {
   }
 
   onSubmit(): void {
-    this.personUpdateFormGroup.markAllAsTouched();
-    if (this.personUpdateFormGroup.valid) {
-      console.log("Validation passed: ", this.personUpdateFormGroup.value);
-    } else {
+    if (this.personUpdateFormGroup.pristine ||
+      this.personUpdateFormGroup.untouched ||
+      !this.personUpdateFormGroup.valid) {
       this.showErrMsg = true;
+    } else {
+      console.log("Validation passed: ", this.personUpdateFormGroup.value);
+      this.clearForm();
+      this.validationSuccessModal();
     }
+  }
+
+  clearForm(): void {
+    this.personUpdateFormGroup.reset();
+    setTimeout(() => {
+      this.formDirective? this.formDirective.resetForm() : null;
+    }, 1)
   }
 
   updateDOM(): void {
     this.changeDetector.detectChanges();
   }
 
+  validationSuccessModal(): void {
+    this.dialog.open(ValidationSuccessModal, {
+      width: '250px',
+      enterAnimationDuration: '250ms',
+      exitAnimationDuration: '250ms'
+    });
+  }
+
+}
+
+@Component({
+  selector: 'validation-success-modal',
+  templateUrl: 'dialog-modals/validation-success-modal.html',
+  styleUrls: ['dialog-modals/validation-success-modal.scss'],
+})
+export class ValidationSuccessModal {
+  constructor(public dialogRef: MatDialogRef<ValidationSuccessModal>) {}
 }

@@ -1,4 +1,4 @@
-<form [formGroup]="personUpdateFormGroup" novalidate (ngSubmit)="onSubmit()">
+<form #formDirective="ngForm" [formGroup]="personUpdateFormGroup" novalidate (ngSubmit)="onSubmit()">
   <mat-card class="user-card">
     <mat-card-header>
       <mat-card-title>Update a person on the network:</mat-card-title>
