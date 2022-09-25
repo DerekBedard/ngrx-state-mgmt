@@ -44,7 +44,7 @@ export class PeopleEffects {
       ofType(updatePeople),
       switchMap((action) =>
         // Call mock put request, convert it to an observable
-        from(this.peopleService.mockPeoplePutRequest(action.nextPerson)).pipe(
+        from(this.peopleService.mockPeoplePutRequest(action.nextPerson, action.delKeys, action.addKeys)).pipe(
           // tap((people: { [key: string]: Person })  => console.log("tap log: ", people)),
           // If value returned, dispatch a success action
           map((people: { [key: string]: Person }) => updatePeopleSuccess({ people })),

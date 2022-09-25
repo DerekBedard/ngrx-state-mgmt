@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, NgForm, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Store } from "@ngrx/store";
+import { pairwise } from 'rxjs';
 import { AppState } from 'src/app/state/app.state';
 import { loadPeople, updatePeople } from 'src/app/state/people/people.actions';
 import { selectPeople } from "src/app/state/people/people.selectors";
@@ -23,6 +24,8 @@ export class personFormComponent implements OnInit {
     age: null,
     friends: {}
   };
+  delKeys: string[] = [];
+  addKeys: string[] = [];
   personUpdateFormGroup: any = this.fb.group({
     name: [
       null,
@@ -98,6 +101,16 @@ export class personFormComponent implements OnInit {
       !this.personUpdateFormGroup.valid) {
       this.showErrMsg = true;
     } else {
+      for (const key in this.selectedPerson.friends) {
+        if (!this.personUpdateFormGroup.controls['friends'].value.includes(key)) {
+          this.delKeys.push(key);
+        }
+      }
+      for (let i=0; i<this.personUpdateFormGroup.controls['friends'].value.length; i++) {
+        if (!this.selectedPerson.friends[this.personUpdateFormGroup.controls['friends'].value[i]]) {
+          this.addKeys.push(this.personUpdateFormGroup.controls['friends'].value[i]);
+        }
+      }
       let newFriendsObjFromArr: { [key: string]: Boolean} = this.personUpdateFormGroup.controls['friends'].value.reduce((acc: any,curr:any)=> (acc[curr]=true,acc),{});
       let nextPerson: Person = {
         ...this.personUpdateFormGroup.value,
@@ -105,14 +118,18 @@ export class personFormComponent implements OnInit {
         name: this.personUpdateFormGroup.controls['name'].value.name,
         friends: newFriendsObjFromArr
       }
+      let delKeys = this.delKeys;
+      let addKeys = this.addKeys;
+      this.store.dispatch(updatePeople({ nextPerson, delKeys, addKeys }));
       this.clearForm();
       this.validationSuccessModal();
-      this.store.dispatch(updatePeople({ nextPerson }));
     }
   }
 
   clearForm(): void {
     this.personUpdateFormGroup.reset();
+    this.delKeys = [];
+    this.addKeys = [];
     setTimeout(() => {
       this.formDirective? this.formDirective.resetForm() : null;
     }, 1)

@@ -6,11 +6,11 @@ import * as unparsedJson from '../../../assets/people-on-load.json';
   providedIn: 'root',
 })
 export class PeopleService {
-  people: { [key: string]: Person }  = {};
-  
+  people: { [key: string]: Person } = {};
+
   constructor() {}
 
-  async mockPeopleGetRequest(): Promise<{ [key: string]: Person}> {
+  async mockPeopleGetRequest(): Promise<{ [key: string]: Person }> {
     let parsedJson = JSON.parse(JSON.stringify(unparsedJson));
     if (Object.keys(this.people).length === 0) {
       this.people = parsedJson.people;
@@ -18,20 +18,20 @@ export class PeopleService {
     return this.people;
   }
 
-  async mockPeoplePutRequest(nextPerson: Person): Promise<{ [key: string]: Person}> {
-    let clone = JSON.parse(JSON.stringify(this.people));
-    clone[nextPerson.id] = nextPerson;
-    for (const key in clone) {
-      if (key !== nextPerson.id) {
-        if (nextPerson.friends[key] && !clone[key].friends[nextPerson.id]) {
-          clone[key].friends[nextPerson.id] = true;
-        } else if (!nextPerson.friends[key] && clone[key].friends[nextPerson.id]) {
-          delete clone[key].friends[nextPerson.id];
-        }
-      }
+  async mockPeoplePutRequest(
+    nextPerson: Person,
+    delKeys: string[],
+    addKeys: string[]
+  ): Promise<{ [key: string]: Person }> {
+    let peopleClone = JSON.parse(JSON.stringify(this.people));
+    peopleClone[nextPerson.id] = nextPerson;
+    for (let i = 0; i < delKeys.length; i++) {
+      delete peopleClone[delKeys[i]].friends[nextPerson.id];
     }
-    this.people = clone;
+    for (let i = 0; i < addKeys.length; i++) {
+      peopleClone[addKeys[i]].friends[nextPerson.id] = true;
+    }
+    this.people = peopleClone;
     return this.people;
   }
-
 }
