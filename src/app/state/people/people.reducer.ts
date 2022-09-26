@@ -10,7 +10,6 @@ import {
 } from './people.actions';
 
 export interface PeopleState {
-  // people: Person[];
   people: { [key: string]: Person }
   error: string | null;
   status: 'pending' | 'loading' | 'error' | 'success';
