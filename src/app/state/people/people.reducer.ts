@@ -17,7 +17,6 @@ export interface PeopleState {
 }
 
 export const initialState: PeopleState = {
-  // people: [],
   people: {},
   error: null,
   status: 'pending',
