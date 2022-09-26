@@ -1,0 +1,64 @@
+<form #formDirective="ngForm" [formGroup]="personUpdateFormGroup" novalidate (ngSubmit)="onSubmit()">
+  <mat-card class="user-card">
+    <mat-card-header>
+      <mat-card-title>Update a person on the network:</mat-card-title>
+    </mat-card-header>
+    <div class="alert alert-err" role="alert" *ngIf="showErrMsg">
+      Please correct all form errors before resubmitting.
+    </div>
+    <mat-card-content>
+      <div class="row">
+        <div class="col-12 pt-3">
+          <mat-form-field class="fullWidth" appearance="fill" [hideRequiredMarker]="true">
+            <mat-label>Select a person</mat-label>
+            <mat-select #personSelect [formControlName]="'name'">
+              <mat-option>None</mat-option>
+              <mat-option *ngFor="let person of people$ | async | keyvalue" [value]="{ id: person.value.id, name: person.value.name }">{{person.value.name}}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="personUpdateFormGroup.controls['name'].hasError('required')">
+              Required field
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row" *ngIf="personSelect.value">
+        <div class="col-12 col-sm-6 pt-4">
+          <app-number-field
+            [group]="personUpdateFormGroup"
+            [control]="'weight'"
+            [placeholder]="personSelect.value.name + ' weight (in lbs.)'"
+            [minErrMsg]="'Weight entry may not be less than 50 lbs.'"
+            [maxErrMsg]="'Weight entry may not exceed 1000 lbs.'">
+          </app-number-field>
+        </div>
+        <div class="col-12 col-sm-6 pt-4">
+          <app-number-field
+            [group]="personUpdateFormGroup"
+            [control]="'age'"
+            [placeholder]="personSelect.value.name + ' age (in years)'"
+            [minErrMsg]="'You must be at least 18 years old'"
+            [maxErrMsg]="'Age entries may not exceed 150'">
+          </app-number-field>
+        </div>
+        <div class="col-12 pt-4">
+          <mat-card-header>
+            <mat-card-title>Network connections:</mat-card-title>
+          </mat-card-header>
+          <mat-selection-list #friends [formControlName]="'friends'">
+            <ng-container *ngFor="let person of people$ | async | keyvalue">
+              <mat-list-option *ngIf="person.value.id !== personSelect.value.id" [value]="person.value.id">
+                {{ person.value.name }}
+              </mat-list-option>
+            </ng-container>
+          </mat-selection-list>
+          <mat-card-subtitle>Total connections: {{friends.selectedOptions.selected.length}})</mat-card-subtitle>
+        </div>
+      </div>
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-raised-button color="primary" type="submit">Submit</button>
+    </mat-card-actions>
+  </mat-card>
+</form>
+<!-- NOTE - Uncomment to view formGroup changes in realtime in UI -->
+<!-- {{ personUpdateFormGroup.value | json }} -->

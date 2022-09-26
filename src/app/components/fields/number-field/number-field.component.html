@@ -1,0 +1,16 @@
+<mat-form-field class="fullWidth" [formGroup]="group">
+  <input
+    matInput
+    type="number"
+    [placeholder]="placeholder"
+    [formControlName]="control"/>
+  <mat-error *ngIf="group.controls[control].hasError('required')">
+    Required field
+  </mat-error>
+  <mat-error *ngIf="group.controls[control].hasError('min')">
+    {{minErrMsg}}
+  </mat-error>
+  <mat-error *ngIf="group.controls[control].hasError('max')">
+    {{maxErrMsg}}
+  </mat-error>
+</mat-form-field>

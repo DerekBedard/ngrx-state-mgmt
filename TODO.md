@@ -1,0 +1,9 @@
+1) -- Create Additional Workflows --
+The app currently features an 'update' person workflow only. Next steps include creating both 'add' and 'remove' person workflows (along with corresponding workflow tabs in the landing page UI). If you would like to test how these additional actions would perform, you can manually add or remove people from the 'people-on-load.json' file. Please remember to update all people affected by changes to the mock data (E.g. if you delete the 'Pink Ranger', also be sure to delete the Pink Ranger's id value from Red Ranger's friend object).
+The primary reason for beginning with the 'update' workflow was to restrict the number of people on the network. This was to ensure that the data visualization will render with enough space to accomodate the number of people on the network. Upon creating the 'add' user workflow, I will likely limit the number of users initially that can be added, until I can revisit the D3 visualization logic. For example, the SVG render size, node size, node distance, etc. should update dynamically based around how many people are present on the network. This type of logic will require further research into network graphing with D3.
+
+2) -- Additional Unit Test Coverage --
+Continue unit test coverage to encompass all actions, reducers, effects, and selectors. Current test coverage is around 40-50%.
+
+3) -- Add Node Color Option to Form --
+Allow end users to select a graph node color during the person 'add' and 'update' workflows. There is currently some hard coded logic for rendering different colored nodes based around a simple Power Rangers theme. For example, the presence of "Red" in a person's name will result in a red node. This temporary theme creates a fun context for color coding and also lowers the cognitive load required to process the application's performance.

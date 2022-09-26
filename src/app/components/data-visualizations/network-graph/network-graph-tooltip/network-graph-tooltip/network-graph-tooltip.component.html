@@ -1,0 +1,11 @@
+<div
+    #graphTooltipWrapper
+    class="graphTooltipWrapper posAbs zIndex"
+    [ngClass]="{ hidden: !showGraphTooltip }">
+    <h4 class="graphTooltipHeader">
+        {{ tooltipHeaderTxt }}
+    </h4>
+    <p class="graphTooltipText">
+        {{ tooltipContentTxt }}
+    </p>
+</div>

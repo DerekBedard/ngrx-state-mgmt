@@ -1,0 +1,28 @@
+<div class="row">
+  <div class="col-12 col-sm-6">
+    <div class="centerContent">
+        <div class="flexChild">
+            <div *ngFor="let person of people$ | async | keyvalue">
+                <strong>{{ person.value.name }}:</strong> {{ person.value.age }} yr. old, {{ person.value.weight }} lbs.<br/>
+                <ng-container *ngIf="hasKeys(person.value.friends)">
+                  <strong>{{ person.value.name }} friends:</strong>
+                  <ul>
+                    <li *ngFor="let friend of person.value.friends | keyvalue">
+                      {{ (people$ | async)?.[friend.key]?.name }}
+                    </li>
+                  </ul>
+                </ng-container>
+            </div>
+        </div>
+    </div>
+  </div>
+  <div class="col-12 col-sm-6">
+    <div class="centerContent posRel">
+      <div #dataViz id="dataViz" [ngClass]="{'hidden': showSpinner((peopleLoadStatus$ | async))}"></div>
+      <div *ngIf="showSpinner((peopleLoadStatus$ | async))" class="flexChild centerContentVert posAbs zIndex">
+        <p class="constructingTxt">D3 data visualization rendering...</p>
+        <mat-spinner [diameter]="60"></mat-spinner>
+      </div>
+    </div>
+  </div>
+</div>
