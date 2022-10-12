@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, NgForm, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Store } from "@ngrx/store";
@@ -12,6 +12,7 @@ import { Person } from './person.model';
   selector: 'app-person-form',
   templateUrl: './person-form.component.html',
   styleUrls: ['./person-form.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class personFormComponent implements OnInit {
   @ViewChild('formDirective') private formDirective: NgForm | undefined;
@@ -154,6 +155,7 @@ export class personFormComponent implements OnInit {
   selector: 'validation-success-modal',
   templateUrl: 'dialog-modals/validation-success-modal.html',
   styleUrls: ['dialog-modals/validation-success-modal.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ValidationSuccessModal {
   constructor(public dialogRef: MatDialogRef<ValidationSuccessModal>) {}
