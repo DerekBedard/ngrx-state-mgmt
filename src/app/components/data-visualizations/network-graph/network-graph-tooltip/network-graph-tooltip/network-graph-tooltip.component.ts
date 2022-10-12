@@ -1,10 +1,11 @@
-import { Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { NetworkGraphService } from 'src/app/services/network-graph/network-graph.service';
 
 @Component({
   selector: 'app-network-graph-tooltip',
   templateUrl: './network-graph-tooltip.component.html',
-  styleUrls: ['./network-graph-tooltip.component.scss']
+  styleUrls: ['./network-graph-tooltip.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NetworkGraphTooltipComponent implements OnInit {
   @ViewChild('graphTooltipWrapper') $graphTooltipWrapper: ElementRef | undefined;

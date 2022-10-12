@@ -26,6 +26,7 @@ import { peopleReducer } from './state/people/people.reducer';
 import { PeopleService } from './services/people/people.service';
 import { NetworkGraphTooltipComponent } from './components/data-visualizations/network-graph/network-graph-tooltip/network-graph-tooltip/network-graph-tooltip.component';
 import { NetworkGraphService } from './services/network-graph/network-graph.service';
+import { HeaderComponent } from './components/header/header.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import { NetworkGraphService } from './services/network-graph/network-graph.serv
     NumberFieldComponent,
     NetworkGraphComponent,
     ValidationSuccessModal,
-    NetworkGraphTooltipComponent
+    NetworkGraphTooltipComponent,
+    HeaderComponent
   ],
   imports: [
     BrowserModule,
