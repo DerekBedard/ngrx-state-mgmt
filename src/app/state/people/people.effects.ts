@@ -17,7 +17,7 @@ import { PeopleService } from 'src/app/services/people/people.service';
 export class PeopleEffects {
   constructor(
     private actions$: Actions,
-    private peopleService: PeopleService
+    private _people: PeopleService
   ) {}
 
   // Run this code when a loadPeople action is dispatched
@@ -27,7 +27,7 @@ export class PeopleEffects {
       // NOTE: switchMap is expected to return an observable, while map can return anything
       switchMap(() =>
         // Call mock get request, convert it to an observable
-        from(this.peopleService.mockPeopleGetRequest()).pipe(
+        from(this._people.mockPeopleGetRequest()).pipe(
           // tap((people: { [key: string]: Person })  => console.log("tap log: ", people)),
           // If value returned, dispatch a success action
           map((people: { [key: string]: Person }) => loadPeopleSuccess({ people })),
@@ -44,7 +44,7 @@ export class PeopleEffects {
       ofType(updatePeople),
       switchMap((action) =>
         // Call mock put request, convert it to an observable
-        from(this.peopleService.mockPeoplePutRequest(action.nextPerson, action.delKeys, action.addKeys)).pipe(
+        from(this._people.mockPeoplePutRequest(action.nextPerson, action.delKeys, action.addKeys)).pipe(
           // tap((people: { [key: string]: Person })  => console.log("tap log: ", people)),
           // If value returned, dispatch a success action
           map((people: { [key: string]: Person }) => updatePeopleSuccess({ people })),
