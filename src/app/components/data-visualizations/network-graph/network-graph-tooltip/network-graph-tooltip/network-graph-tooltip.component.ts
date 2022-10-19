@@ -1,10 +1,24 @@
-import { ChangeDetectionStrategy, Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, Injectable, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { Observable, Subject, Subscription, takeUntil } from 'rxjs';
 import { NetworkGraphService } from 'src/app/services/network-graph/network-graph.service';
+
+@Injectable()
+export class UnsubscribeService implements OnDestroy {
+  private destroy$: Subject<void> = new Subject<void>();
+  destroy(): Observable<void> {
+    return this.destroy$.asObservable();
+  }
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+}
 
 @Component({
   selector: 'app-network-graph-tooltip',
   templateUrl: './network-graph-tooltip.component.html',
   styleUrls: ['./network-graph-tooltip.component.scss'],
+  providers: [UnsubscribeService],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NetworkGraphTooltipComponent implements OnInit {
@@ -14,7 +28,8 @@ export class NetworkGraphTooltipComponent implements OnInit {
   tooltipContentTxt: string = "";
 
   constructor(
-    private networkGraphService: NetworkGraphService,
+    private _networkGraph: NetworkGraphService,
+    private _unsubscribe: UnsubscribeService,
     private renderer: Renderer2
   ) { }
 
@@ -28,7 +43,9 @@ export class NetworkGraphTooltipComponent implements OnInit {
   }
 
   nodeMouseOverStream(): void {
-    this.networkGraphService.nodeMouseOverStream().subscribe((response: any) => {
+    this._networkGraph.nodeMouseOverStream()
+    .pipe(takeUntil(this._unsubscribe.destroy()))
+    .subscribe((response: any) => {
       if (response?.d?.name) {
         this.nodeMouseOver(response.event, response.d);
       }
@@ -36,7 +53,9 @@ export class NetworkGraphTooltipComponent implements OnInit {
   }
 
   nodeMouseOutStream(): void {
-    this.networkGraphService.nodeMouseOutStream().subscribe((response: any) => {
+    this._networkGraph.nodeMouseOutStream()
+    .pipe(takeUntil(this._unsubscribe.destroy()))
+    .subscribe((response: any) => {
       this.nodeMouseOut(response);
     });
   }

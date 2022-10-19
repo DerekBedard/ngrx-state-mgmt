@@ -1,16 +1,29 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Injectable, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
 import * as d3 from 'd3';
 import { NetworkGraphService } from 'src/app/services/network-graph/network-graph.service';
 import { AppState } from 'src/app/state/app.state';
 import { selectPeople, selectPeopleLoadStatus } from 'src/app/state/people/people.selectors';
 import { Person } from '../../forms/person-form/person.model';
-import { interval, Observable, Subscription } from 'rxjs';
+import { interval, Observable, Subject, Subscription, takeUntil } from 'rxjs';
+
+@Injectable()
+export class UnsubscribeService implements OnDestroy {
+  private destroy$: Subject<void> = new Subject<void>();
+  destroy(): Observable<void> {
+    return this.destroy$.asObservable();
+  }
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+}
 
 @Component({
   selector: 'app-network-graph',
   templateUrl: './network-graph.component.html',
   styleUrls: ['./network-graph.component.scss'],
+  providers: [UnsubscribeService],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NetworkGraphComponent implements OnInit {
@@ -29,18 +42,25 @@ export class NetworkGraphComponent implements OnInit {
 
   constructor(
     private store: Store<AppState>,
-    private networkGraphService: NetworkGraphService,
+    private _networkGraph: NetworkGraphService,
+    private _unsubscribe: UnsubscribeService,
     private cd: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
+    this.startSubscriptions();
+  }
+
+  startSubscriptions(): void {
     this.peopleLoadStatusSubscribe();
     this.intervalSubscribe();
     this.peopleSubscribe();
   }
 
   peopleLoadStatusSubscribe(): void {
-    this.peopleLoadStatus$.subscribe((status: string | null) => {
+    this.peopleLoadStatus$
+    .pipe(takeUntil(this._unsubscribe.destroy()))
+    .subscribe((status: string | null) => {
       this.status = status;
       if (status !== "success" && !this.showSpinner) {
         this.showSpinner = true;
@@ -51,7 +71,9 @@ export class NetworkGraphComponent implements OnInit {
 
   intervalSubscribe(): void {
     this.interval$ = interval(1000);
-    this.intervalSub = this.interval$.subscribe((x: number) => {
+    this.intervalSub = this.interval$
+      .pipe(takeUntil(this._unsubscribe.destroy()))
+      .subscribe((x: number) => {
       if (this.status && this.status === "success") {
         if (this.$dataViz) {
           let firstCircle = this.$dataViz.nativeElement.getElementsByTagName('circle')[0];
@@ -68,7 +90,9 @@ export class NetworkGraphComponent implements OnInit {
   }
 
   peopleSubscribe(): void {
-    this.people$.subscribe((people: { [key: string]: Person }) => {
+    this.people$
+    .pipe(takeUntil(this._unsubscribe.destroy()))
+    .subscribe((people: { [key: string]: Person }) => {
       if (this.$dataViz) {
         this.$dataViz.nativeElement.innerHTML = "";
       }
@@ -106,11 +130,11 @@ export class NetworkGraphComponent implements OnInit {
   }
 
   nodeMouseOver(event: any, d: any): void {
-    this.networkGraphService.nodeMouseOver(event, d);
+    this._networkGraph.nodeMouseOver(event, d);
   }
 
   nodeMouseOut(): void {
-    this.networkGraphService.nodeMouseOut();
+    this._networkGraph.nodeMouseOut();
   }
 
   createNetworkGraph(data: any): void {
@@ -188,4 +212,5 @@ export class NetworkGraphComponent implements OnInit {
         });
     }
   }
+
 }

@@ -1,17 +1,30 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Injectable, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, NgForm, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Store } from "@ngrx/store";
-import { pairwise } from 'rxjs';
+import { Observable, Subject, takeUntil } from 'rxjs';
 import { AppState } from 'src/app/state/app.state';
 import { loadPeople, updatePeople } from 'src/app/state/people/people.actions';
 import { selectPeople } from "src/app/state/people/people.selectors";
 import { Person } from './person.model';
 
+@Injectable()
+export class UnsubscribeService implements OnDestroy {
+  private destroy$: Subject<void> = new Subject<void>();
+  destroy(): Observable<void> {
+    return this.destroy$.asObservable();
+  }
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+}
+
 @Component({
   selector: 'app-person-form',
   templateUrl: './person-form.component.html',
   styleUrls: ['./person-form.component.scss'],
+  providers: [UnsubscribeService],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class personFormComponent implements OnInit {
@@ -58,7 +71,8 @@ export class personFormComponent implements OnInit {
     private store: Store<AppState>,
     private fb: FormBuilder,
     private changeDetector: ChangeDetectorRef,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private _unsubscribe: UnsubscribeService
   ) {}
 
   ngOnInit() {
@@ -72,12 +86,16 @@ export class personFormComponent implements OnInit {
   }
 
   formValChangesSubscribe(): void {
-    this.personUpdateFormGroup.valueChanges.subscribe(() => {
+    this.personUpdateFormGroup.valueChanges
+    .pipe(takeUntil(this._unsubscribe.destroy()))
+    .subscribe(() => {
       if (this.personUpdateFormGroup.valid) {
         this.showErrMsg = false;
       }
     });
-    this.personUpdateFormGroup.get('name').valueChanges.subscribe((val: { id: string, name: string }) => {
+    this.personUpdateFormGroup.get('name').valueChanges
+    .pipe(takeUntil(this._unsubscribe.destroy()))
+    .subscribe((val: { id: string, name: string }) => {
       if (val) {
         this.selectedPerson = this.people[val.id];
         this.personUpdateFormGroup.controls['weight'].setValue(this.selectedPerson.weight);
@@ -91,7 +109,9 @@ export class personFormComponent implements OnInit {
   }
 
   peopleSubscribe(): void {
-    this.people$.subscribe((people: { [key: string]: Person }) => {
+    this.people$
+    .pipe(takeUntil(this._unsubscribe.destroy()))
+    .subscribe((people: { [key: string]: Person }) => {
       this.people = people;
     })
   }
