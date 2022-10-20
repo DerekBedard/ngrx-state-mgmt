@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ElementRef, Injectable, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Injectable, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { Observable, Subject, Subscription, takeUntil } from 'rxjs';
 import { NetworkGraphService } from 'src/app/services/network-graph/network-graph.service';
 
@@ -30,7 +30,8 @@ export class NetworkGraphTooltipComponent implements OnInit {
   constructor(
     private _networkGraph: NetworkGraphService,
     private _unsubscribe: UnsubscribeService,
-    private renderer: Renderer2
+    private renderer: Renderer2,
+    private cd: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
@@ -67,11 +68,13 @@ export class NetworkGraphTooltipComponent implements OnInit {
       this.renderer.setStyle(this.$graphTooltipWrapper.nativeElement, 'top', event.pageY + 'px');
       this.renderer.setStyle(this.$graphTooltipWrapper.nativeElement, 'left', event.pageX + 'px');
       this.showGraphTooltip = true;
+      this.cd.detectChanges();
     }
   }
 
   nodeMouseOut(bool: Boolean): void {
     this.showGraphTooltip = bool;
+    this.cd.detectChanges();
   }
 
 }
