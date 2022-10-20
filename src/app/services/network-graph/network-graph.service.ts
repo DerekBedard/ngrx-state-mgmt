@@ -1,10 +1,10 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
-export class NetworkGraphService {
+export class NetworkGraphService implements OnDestroy {
   private nodeMouseOver$: BehaviorSubject<any>;
   private nodeMouseOut$: BehaviorSubject<Boolean>;
 
@@ -27,5 +27,10 @@ export class NetworkGraphService {
 
   nodeMouseOut(): void {
     this.nodeMouseOut$.next(false);
+  }
+
+  ngOnDestroy(): void {
+    this.nodeMouseOver$.complete();
+    this.nodeMouseOut$.complete();
   }
 }
