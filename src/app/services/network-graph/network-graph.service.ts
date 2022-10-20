@@ -1,23 +1,20 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class NetworkGraphService implements OnDestroy {
-  private nodeMouseOver$: BehaviorSubject<any>;
-  private nodeMouseOut$: BehaviorSubject<Boolean>;
+  private nodeMouseOver$: Subject<any> = new Subject<any>();
+  private nodeMouseOut$: Subject<Boolean> = new Subject<any>();
 
-  constructor() {
-    this.nodeMouseOver$ = new BehaviorSubject<any>(null);
-    this.nodeMouseOut$ = new BehaviorSubject<any>(false);
-  }
+  constructor() {}
 
   nodeMouseOverStream(): Observable<any> {
     return this.nodeMouseOver$.asObservable();
   }
 
-  nodeMouseOutStream(): Observable<null | Boolean> {
+  nodeMouseOutStream(): Observable<Boolean> {
     return this.nodeMouseOut$.asObservable();
   }
 
