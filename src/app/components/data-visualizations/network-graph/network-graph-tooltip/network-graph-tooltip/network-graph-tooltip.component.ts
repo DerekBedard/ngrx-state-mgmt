@@ -35,10 +35,6 @@ export class NetworkGraphTooltipComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.startSubscriptions();
-  }
-
-  startSubscriptions(): void {
     this.nodeMouseOverStream();
     this.nodeMouseOutStream();
   }

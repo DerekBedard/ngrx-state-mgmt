@@ -77,10 +77,6 @@ export class personFormComponent implements OnInit {
 
   ngOnInit() {
     this.store.dispatch(loadPeople());
-    this.startSubscriptions();
-  }
-
-  startSubscriptions(): void {
     this.formValChangesSubscribe();
     this.peopleSubscribe();
   }
