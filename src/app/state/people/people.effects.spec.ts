@@ -40,6 +40,7 @@ describe('Store > Data > PeopleEffects', () => {
           2: true,
           4: true,
         },
+        nodeColor: "red"
       },
     };
     
