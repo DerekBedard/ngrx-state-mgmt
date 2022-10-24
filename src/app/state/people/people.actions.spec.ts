@@ -17,8 +17,9 @@ describe('Store > Actions', () => {
             friends: {
               2: true,
               4: true
-            }
-          },
+            },
+            nodeColor: "red"
+          }
     };
     const action = Actions.loadPeopleSuccess({people: people});
 

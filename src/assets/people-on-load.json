@@ -8,7 +8,8 @@
       "friends": {
         "2": true,
         "4": true
-      }
+      },
+      "nodeColor": "red"
     },
     "2": {
       "id": "2",
@@ -17,14 +18,16 @@
       "age": 24,
       "friends": {
         "1": true
-      }
+      },
+      "nodeColor": "blue"
     },
     "3": {
       "id": "3",
       "name": "Green Ranger",
       "weight": 210,
       "age": 26,
-      "friends": {}
+      "friends": {},
+      "nodeColor": "green"
     },
     "4": {
       "id": "4",
@@ -33,7 +36,8 @@
       "age": 27,
       "friends": {
         "1": true
-      }
+      },
+      "nodeColor": "pink"
     }
   }
 }

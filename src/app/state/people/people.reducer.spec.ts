@@ -25,7 +25,8 @@ describe('Store > Reducers', () => {
             friends: {
               2: true,
               4: true
-            }
+            },
+            nodeColor: "red"
           },
     };
     const action = fromActions.loadPeopleSuccess({people: people});

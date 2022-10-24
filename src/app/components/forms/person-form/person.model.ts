@@ -3,5 +3,6 @@ export interface Person {
     name: string,
     weight: number | null,
     age: number | null,
-    friends: { [key: string]: Boolean }
+    friends: { [key: string]: Boolean },
+    nodeColor: string | null
 }

@@ -68,7 +68,7 @@ export class NetworkGraphComponent implements OnInit, AfterViewInit, OnDestroy {
     this.graphMo = new MutationObserver(() => {
       if (this.status && this.status === 'success') {
         let $firstCircle =
-          this.$dataViz!.nativeElement.getElementsByTagName('circle')[0];
+          this.$dataViz?.nativeElement.getElementsByTagName('circle')[0];
         if ($firstCircle?.hasAttribute('cx')) {
           this.showSpinner = false;
           this.cd.detectChanges();
@@ -106,6 +106,7 @@ export class NetworkGraphComponent implements OnInit, AfterViewInit, OnDestroy {
             name: people[personKey].name,
             weight: people[personKey].weight,
             age: people[personKey].age,
+            nodeColor: people[personKey].nodeColor
           });
           for (const friendKey in people[personKey].friends) {
             this.graphData.links.push({
@@ -155,19 +156,11 @@ export class NetworkGraphComponent implements OnInit, AfterViewInit, OnDestroy {
       .append('circle')
       .attr('r', 5)
       .style('fill', function (d: any) {
-        if (d.name.includes('Red')) {
-          return 'red';
-        }
-        if (d.name.includes('Blue')) {
-          return 'blue';
-        }
-        if (d.name.includes('Green')) {
-          return 'green';
-        }
-        if (d.name.includes('Pink')) {
-          return 'pink';
-        }
-        return '#673ab7';
+          if (d.nodeColor) {
+            return d.nodeColor;
+          } else {
+            return '#673ab7';
+          }
       })
       .on('mouseover', (event: any, d: any) => {
         this.component.nodeMouseOver(event, d);
@@ -217,6 +210,6 @@ export class NetworkGraphComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.graphMo!.disconnect();
+    this.graphMo?.disconnect();
   }
 }

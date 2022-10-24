@@ -36,7 +36,8 @@ export class personFormComponent implements OnInit {
     name: "",
     weight: null,
     age: null,
-    friends: {}
+    friends: {},
+    nodeColor: null
   };
   delKeys: string[] = [];
   addKeys: string[] = [];
@@ -133,7 +134,8 @@ export class personFormComponent implements OnInit {
         ...this.personUpdateFormGroup.value,
         id: this.selectedPerson?.id,
         name: this.personUpdateFormGroup.controls['name'].value.name,
-        friends: newFriendsObjFromArr
+        friends: newFriendsObjFromArr,
+        nodeColor: this.selectedPerson?.nodeColor
       }
       let delKeys = this.delKeys;
       let addKeys = this.addKeys;
