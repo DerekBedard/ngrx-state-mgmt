@@ -9,7 +9,7 @@ import {
 } from 'src/app/state/people/people.actions';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { from, of } from 'rxjs';
-import { catchError, map, switchMap, tap } from 'rxjs/operators';
+import { catchError, map, switchMap, concatMap, tap } from 'rxjs/operators';
 import { Person } from 'src/app/components/forms/person-form/person.model';
 import { PeopleService } from 'src/app/services/people/people.service';
 
@@ -24,11 +24,10 @@ export class PeopleEffects {
   loadPeople$ = createEffect(() =>
     this.actions$.pipe(
       ofType(loadPeople),
-      // NOTE: switchMap is expected to return an observable, while map can return anything
       switchMap(() =>
         // Call mock get request, convert it to an observable
         from(this._people.mockPeopleGetRequest()).pipe(
-          // tap((people: { [key: string]: Person })  => console.log("tap log: ", people)),
+          // tap((people: { [key: string]: Person })  => console.log("load tap log: ", people)),
           // If value returned, dispatch a success action
           map((people: { [key: string]: Person }) => loadPeopleSuccess({ people })),
           // If error returned, dispatched a failure action
@@ -42,10 +41,10 @@ export class PeopleEffects {
   updatePeople$ = createEffect(() =>
     this.actions$.pipe(
       ofType(updatePeople),
-      switchMap((action) =>
+      concatMap((action) =>
         // Call mock put request, convert it to an observable
         from(this._people.mockPeoplePutRequest(action.nextPerson, action.delKeys, action.addKeys)).pipe(
-          // tap((people: { [key: string]: Person })  => console.log("tap log: ", people)),
+          // tap((people: { [key: string]: Person })  => console.log("update tap log: ", people)),
           // If value returned, dispatch a success action
           map((people: { [key: string]: Person }) => updatePeopleSuccess({ people })),
           // If error returned, dispatched a failure action
